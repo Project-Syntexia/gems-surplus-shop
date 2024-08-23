@@ -7,13 +7,31 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// model Logs {
+//     id String @id @default(auto()) @map("_id") @db.ObjectId
+//     model ModelEnum
+//     description String
+//     createdDate DateTime @default(now())
+// }
+
 model User {
     id String @id @default(auto()) @map("_id") @db.ObjectId
     name String
     address Address
-    gender  Gender
+    gender  GenderEnum
     phoneNumber String @default("000-000-0000")
     comments Comment[]
+    createdDate DateTime @default(now())
+    modifiedDate DateTime @updatedAt
+    cart Cart[]
+}
+
+model Cart {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    user User @relation(fields: [userId], references: [id])
+    userId String @db.ObjectId
+    product Product @relation(fields: [productId], references: [id])
+    productId String @db.ObjectId
 }
 
 model Product {
@@ -22,6 +40,12 @@ model Product {
     description String
     imageSrc String
     comments Comment[]
+    price Price
+    quantity Int
+    quality QualityEnum
+    createdDate DateTime @default(now())
+    modifiedDate DateTime @updatedAt
+    cart Cart[]
 }
 
 model Comment {
@@ -32,6 +56,8 @@ model Comment {
     userId String @db.ObjectId
     product Product @relation(fields: [productId], references: [id])
     productId String @db.ObjectId
+    createdDate DateTime @default(now())
+    modifiedDate DateTime @updatedAt
 }
 
 type Address {
@@ -41,7 +67,25 @@ type Address {
     zip String
 }
 
-enum Gender {
+type Price {
+    value Int
+    currency String
+}
+
+enum GenderEnum {
     MALE
     FEMALE
 }
+
+enum QualityEnum {
+    USED
+    SLIGHTLY_USED
+    LIKE_BRAND_NEW
+}
+
+// enum ModelEnum {
+//     USER
+//     CART
+//     PRODUCT
+//     COMMENT
+// }

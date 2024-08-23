@@ -1,14 +1,17 @@
 import { HydrateClient } from "@/trpc/server";
+import Main from "@/app/_components/main";
+import { SHOP_NAME } from "./utils/const";
 
 export default async function Home() {
-  const title = "Gem's Surplus Consumer Goods Trading";
   return (
     <HydrateClient>
-      <main className="flex h-screen items-center justify-center bg-gradient-to-r from-primary to-secondary">
-        <h1 className="text-stroke relative select-none bg-transparent text-center text-5xl font-bold tracking-tighter text-paper">
-          {title}
-        </h1>
-      </main>
+      <Main>
+        <div className="flex h-full items-center justify-center bg-gradient-to-r from-primary to-secondary">
+          <h1 className="text-stroke relative select-none bg-transparent text-center text-5xl font-bold tracking-tighter text-paper">
+            {SHOP_NAME}
+          </h1>
+        </div>
+      </Main>
     </HydrateClient>
   );
 }
