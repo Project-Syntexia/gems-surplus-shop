@@ -13,7 +13,7 @@ import {
 type InitialStateType = {
   productId?: string;
 };
-type ProductContextType = InitialStateType & {};
+type ProductContextType = InitialStateType; // & {};
 const initialState: InitialStateType = {};
 const ProductContext = createContext<ProductContextType>({
   ...initialState,

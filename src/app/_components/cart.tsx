@@ -4,8 +4,7 @@ import { useProduct } from "../contexts";
 import { api } from "@/trpc/react";
 import { SignedIn } from "@clerk/nextjs";
 import { INVALID_NUM } from "../utils/const";
-import { useEffect, useRef, useState } from "react";
-import { clearConfigCache } from "prettier";
+import { useRef, useState } from "react";
 
 export const fieldContainerClasses =
   "flex items-center justify-between p-2 gap-2 w-full";
@@ -29,15 +28,15 @@ const AddToCartButton = () => {
     },
   });
 
-  useEffect(() => {
-    return setState(cartList[1].data);
-  }, [cartList[1].status]);
+  if (cartList[1].isFetched) {
+    setState(cartList[1].data);
+  }
 
   function addToCartHandler() {
     const index = state.findIndex((data) => data.productId === productId);
     if (index !== INVALID_NUM) return alert("Product already exists!");
     addToCart.mutate({
-      productId: productId as string,
+      productId: productId!,
       quantity: parseInt(inputQuantityRef.current.value, 10),
     });
   }

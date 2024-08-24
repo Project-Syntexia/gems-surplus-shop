@@ -54,7 +54,7 @@ const Page = () => {
 
   function productComponentIdHelper(id: string) {
     if (id.startsWith("product")) {
-      const splittedId = id.split("-")[1] as string;
+      const splittedId = id.split("-")[1]!;
       const imageSrcSplitValue = "image";
       return splittedId === imageSrcSplitValue
         ? "imageSrc"

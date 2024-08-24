@@ -11,7 +11,7 @@ import { EMPTY_STRING, INVALID_NUM } from "../utils/const";
 
 const Page = () => {
   const cartList = api.cart.fetchCartList.useSuspenseQuery();
-  const placeholderProduct = {
+  const placeholderProduct: ProductType = {
     id: EMPTY_STRING,
     description: EMPTY_STRING,
     createdDate: new Date(),
@@ -25,7 +25,7 @@ const Page = () => {
     quality: "USED",
     quantity: INVALID_NUM,
   };
-  const placeHolderProducts: ProductType[] = new Array(10).fill(
+  const placeHolderProducts = new Array<ProductType>(10).fill(
     placeholderProduct,
   );
 
