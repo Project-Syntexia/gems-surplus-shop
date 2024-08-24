@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from "../trpc";
+import { env } from "@/env";
 
 const productSchema = z.object({
   name: z.string(),
@@ -20,6 +21,7 @@ export const productsRouter = createTRPCRouter({
   createProduct: privateProcedure
     .input(productSchema)
     .mutation(async ({ input, ctx }) => {
+      console.log(env.DATABASE_URL);
       return await ctx.prisma.product.create({
         data: {
           name: input.name,
@@ -35,6 +37,7 @@ export const productsRouter = createTRPCRouter({
   createManyProduct: privateProcedure
     .input(z.array(productSchema))
     .mutation(async ({ input, ctx }) => {
+      console.log(env.DATABASE_URL);
       const result = await ctx.prisma.product.createMany({
         data: input,
       });
@@ -48,6 +51,7 @@ export const productsRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input, ctx }) => {
+      console.log(env.DATABASE_URL);
       return ctx.prisma.product.findUnique({
         where: {
           id: input.id,
@@ -58,6 +62,7 @@ export const productsRouter = createTRPCRouter({
   fetchProducts: publicProcedure
     .input(z.number())
     .query(async ({ input, ctx }) => {
+      console.log(env.DATABASE_URL);
       return ctx.prisma.product.findMany({
         orderBy: {
           createdDate: "desc",
@@ -74,6 +79,7 @@ export const productsRouter = createTRPCRouter({
     )
     .input(productSchema)
     .mutation(async ({ input, ctx }) => {
+      console.log(env.DATABASE_URL);
       return ctx.prisma.product.update({
         data: {
           name: input.name,
@@ -96,6 +102,7 @@ export const productsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      console.log(env.DATABASE_URL);
       return ctx.prisma.product.delete({
         where: {
           id: input.id,
