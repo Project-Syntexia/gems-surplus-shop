@@ -4,23 +4,25 @@ import { createTRPCRouter, privateProcedure } from "../trpc";
 
 const cartSchema = z.object({
   productId: z.string(),
+  quantity: z.number(),
 });
 
 // TODO: Convert the procedure into Admin only for mutations
 
 export const cartsRouter = createTRPCRouter({
-  createProduct: privateProcedure
+  addToCart: privateProcedure
     .input(cartSchema)
     .mutation(async ({ input, ctx }) => {
       return await ctx.prisma.cart.create({
         data: {
           productId: input.productId,
+          quantity: input.quantity,
           userId: ctx.userId,
         },
       });
     }),
 
-  createManyProduct: privateProcedure
+  addToCartManyProduct: privateProcedure
     .input(z.array(cartSchema))
     .mutation(async ({ input, ctx }) => {
       const result = await ctx.prisma.cart.createMany({
@@ -40,7 +42,18 @@ export const cartsRouter = createTRPCRouter({
       });
     }),
 
-  deleteProduct: privateProcedure
+  fetchCartList: privateProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.cart.findMany({
+      where: {
+        userId: ctx.userId,
+      },
+      orderBy: {
+        id: "desc",
+      },
+    });
+  }),
+
+  deleteCartProduct: privateProcedure
     .input(z.string())
     .mutation(async ({ input, ctx }) => {
       return ctx.prisma.cart.delete({

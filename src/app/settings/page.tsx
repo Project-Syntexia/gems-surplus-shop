@@ -14,6 +14,7 @@ const Page = () => {
           <SignOutButton />
         </SignedIn>
         <SignedOut>
+          {/* TODO: Add User to Database */}
           <SignInButton />
         </SignedOut>
       </div>

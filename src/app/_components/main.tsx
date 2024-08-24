@@ -7,7 +7,7 @@ const Main = ({ children }: ChildrenType) => {
   return (
     <>
       <Header />
-      <main className="h-screen">{children}</main>
+      <main className="h-screen bg-paper">{children}</main>
       <Footer />
     </>
   );

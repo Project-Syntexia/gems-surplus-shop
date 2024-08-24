@@ -1,3 +1,9 @@
+import AddToCartButton from "@/app/_components/cart";
+import Main from "@/app/_components/main";
+import ProductDetails, {
+  productDetailsContainerClasses,
+} from "@/app/_components/product";
+import ProductProvider from "@/app/contexts";
 import { SHOP_NAME } from "@/app/utils/const";
 import { api } from "@/trpc/server";
 import type {
@@ -35,60 +41,32 @@ export async function generateMetadata(
   };
 }
 
-const Page = ({ params }: PropsType) => {
-  return getProductDetails(params.id)
-    .then(async (props) => {
-      if (props === null)
-        throw new Error(`Result is null, Product ID: ${params.id} not found!`);
+const Page = async ({ params }: PropsType) => {
+  try {
+    const productDetails = await getProductDetails(params.id);
 
-      const { name, description, imageSrc, quantity, quality, price } = props;
-      return (
-        <div className="mx-auto flex w-max flex-col items-center justify-center rounded-lg border p-2 shadow-sm">
-          <input id="name" placeholder="name" value={name} disabled />
-          <input
-            id="description"
-            placeholder="description"
-            value={description}
-            disabled
-          />
-          <input
-            id="imageSrc"
-            placeholder="imageSrc"
-            value={imageSrc}
-            disabled
-          />
-          <input
-            id="quantity"
-            placeholder="quantity"
-            type="number"
-            value={quantity}
-            disabled
-          />
-          <select id="quality" value={quality} disabled>
-            <option>USED</option>
-            <option>SLIGHTLY_USED</option>
-            <option>LIKE_BRAND_NEW</option>
-          </select>
-          <input
-            id="price"
-            placeholder="price"
-            type="number"
-            value={price.value}
-            disabled
-          />
-          <select id="currency" value={price.value} disabled>
-            <option>PHP</option>
-          </select>
-        </div>
-      );
-    })
-    .catch(() => {
-      return (
+    if (productDetails === null)
+      throw new Error(`Result is null, Product ID: ${params.id} not found!`);
+
+    return (
+      <Main>
+        <ProductProvider>
+          <div className={productDetailsContainerClasses}>
+            <ProductDetails {...productDetails} isDisabled />
+            <AddToCartButton />
+          </div>
+        </ProductProvider>
+      </Main>
+    );
+  } catch (err) {
+    return (
+      <Main>
         <div>
           <p>404 Not Found</p>
         </div>
-      );
-    });
+      </Main>
+    );
+  }
 };
 
 export default Page;

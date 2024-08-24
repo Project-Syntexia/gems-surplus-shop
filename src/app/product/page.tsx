@@ -1,12 +1,23 @@
 "use client";
 
-import React, { type ChangeEvent, useRef, useState } from "react";
+import React, { type ChangeEvent, Suspense, useRef, useState } from "react";
 import type { api as serverApi } from "@/trpc/server";
 import Main from "@/app/_components/main";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
+import {
+  ProductDescription,
+  ProductImage,
+  ProductName,
+  ProductPrice,
+  ProductQuality,
+  ProductQuantity,
+} from "../_components/product";
+import { EMPTY_STRING, INVALID_NUM } from "../utils/const";
 
-type ProductType = Awaited<ReturnType<typeof serverApi.product.createProduct>>;
+export type ProductType = Awaited<
+  ReturnType<typeof serverApi.product.createProduct>
+>;
 
 type InitialStateType = {
   product: Partial<ProductType>;
@@ -38,7 +49,19 @@ const Page = () => {
       },
     });
 
+  const STARTING_NUM = INVALID_NUM * INVALID_NUM;
   const PRODUCT_KEY_LENGTH = 6;
+
+  function productComponentIdHelper(id: string) {
+    if (id.startsWith("product")) {
+      const splittedId = id.split("-")[1] as string;
+      const imageSrcSplitValue = "image";
+      return splittedId === imageSrcSplitValue
+        ? "imageSrc"
+        : (splittedId as keyof ProductType);
+    }
+    return id as keyof ProductType;
+  }
 
   function createProduct() {
     const productKeys = Object.keys(state.product);
@@ -53,7 +76,7 @@ const Page = () => {
   }
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     const input = e.currentTarget as HTMLInputElement;
-    const key = input.id as keyof ProductType;
+    const key = productComponentIdHelper(input.id);
     const value =
       key === "quantity" || key === "price"
         ? parseInt(input.value, 10)
@@ -78,7 +101,7 @@ const Page = () => {
   }
   function handleSelectChange(e: ChangeEvent<HTMLSelectElement>) {
     const select = e.currentTarget as HTMLSelectElement;
-    const key = select.id as keyof ProductType;
+    const key = productComponentIdHelper(select.id);
     const value = select.value;
 
     setState((prevState) => ({
@@ -97,38 +120,33 @@ const Page = () => {
           createProduct();
         }}
       >
-        <input id="name" placeholder="name" onChange={handleInputChange} />
-        <input
-          id="description"
-          placeholder="description"
+        <ProductName
+          name={state.product.name ?? EMPTY_STRING}
           onChange={handleInputChange}
         />
-        <input
-          id="imageSrc"
-          placeholder="imageSrc"
-          // type="file"
+        <ProductDescription
+          description={state.product.description ?? EMPTY_STRING}
           onChange={handleInputChange}
         />
-        <input
-          id="quantity"
-          placeholder="quantity"
-          type="number"
+        <ProductImage
+          src={state.product.imageSrc ?? EMPTY_STRING}
           onChange={handleInputChange}
         />
-        <select id="quality" onChange={handleSelectChange}>
-          <option>USED</option>
-          <option>SLIGHTLY_USED</option>
-          <option>LIKE_BRAND_NEW</option>
-        </select>
-        <input
-          id="price"
-          placeholder="price"
-          type="number"
+        <ProductQuantity
+          quantity={state.product.quantity ?? STARTING_NUM}
           onChange={handleInputChange}
         />
-        <select id="currency" onChange={handleSelectChange}>
-          <option>PHP</option>
-        </select>
+        <ProductQuality
+          quality={state.product.quality ?? "USED"}
+          onChange={handleSelectChange}
+        />
+        <ProductPrice
+          price={
+            state.product.price ?? { currency: "php", value: STARTING_NUM }
+          }
+          input={{ onChange: handleInputChange }}
+          select={{ onChange: handleSelectChange }}
+        />
         <button
           type="submit"
           disabled={Object.keys(state.product).length !== PRODUCT_KEY_LENGTH}
@@ -137,21 +155,33 @@ const Page = () => {
         </button>
       </form>
 
-      {fetchProduct[0]?.map((data) => {
-        const { id, name, description } = data;
-        return (
+      <Suspense
+        fallback={
           <button
-            key={id}
             className="rounded-lg border bg-primary p-2 shadow-sm"
-            onClick={() => {
-              router.push(`/product/${id}`);
-            }}
+            disabled
           >
-            <p>{name}</p>
-            <p>{description}</p>
+            <p></p>
+            <p></p>
           </button>
-        );
-      })}
+        }
+      >
+        {fetchProduct[1].data.map((data) => {
+          const { id, name, description } = data;
+          return (
+            <button
+              key={id}
+              className="rounded-lg border bg-primary p-2 shadow-sm"
+              onClick={() => {
+                router.push(`/product/${id}`);
+              }}
+            >
+              <p>{name}</p>
+              <p>{description}</p>
+            </button>
+          );
+        })}
+      </Suspense>
     </Main>
   );
 };

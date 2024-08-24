@@ -1,6 +1,6 @@
 import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
-import { paper, primary, secondary } from "./src/styles/colors";
+import { contrast, paper, primary, secondary } from "./src/styles/colors";
 
 export default {
   content: ["./src/**/*.tsx"],
@@ -13,6 +13,7 @@ export default {
         primary: primary,
         secondary: secondary,
         paper: paper,
+        contrast: contrast,
       },
     },
   },
