@@ -11,7 +11,6 @@ export const env = createEnv({
     NODE_CONNECTION_STRING: z.string(),
     CLERK_SECRET_KEY: z.string(),
     CLERK_SIGN_IN_URL: z.string(),
-    DATABASE_URL: z.string(),
   },
 
   /**
@@ -32,7 +31,6 @@ export const env = createEnv({
     NODE_CONNECTION_STRING: process.env.NODE_CONNECTION_STRING,
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
     CLERK_SIGN_IN_URL: process.env.CLERK_SIGN_IN_URL,
-    DATABASE_URL: process.env.DATABASE_URL,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
