@@ -28,10 +28,6 @@ const AddToCartButton = () => {
     },
   });
 
-  if (cartList[1].isFetched) {
-    setState(cartList[1].data);
-  }
-
   function addToCartHandler() {
     const index = state.findIndex((data) => data.productId === productId);
     if (index !== INVALID_NUM) return alert("Product already exists!");
