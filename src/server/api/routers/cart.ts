@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { createTRPCRouter, privateProcedure } from "../trpc";
+import { createTRPCRouter, privateProcedure } from "@/server/api/trpc";
 
 const cartSchema = z.object({
   productId: z.string(),

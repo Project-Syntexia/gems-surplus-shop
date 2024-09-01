@@ -1,17 +1,32 @@
 import { z } from "zod";
 
-import { createTRPCRouter, privateProcedure, publicProcedure } from "../trpc";
+import {
+  createTRPCRouter,
+  privateProcedure,
+  publicProcedure,
+} from "@/server/api/trpc";
 
-const productSchema = z.object({
-  name: z.string(),
+export const productSchema = z.object({
+  id: z.string(),
+  category: z.enum([
+    "ELECTRONICS",
+    "FASHION",
+    "FURNITURE",
+    "HARDWARE_ITEM",
+    "MEDIA",
+    "TOYS_AND_HOBBIES",
+  ]),
+  createdDate: z.date(),
   description: z.string(),
   imageSrc: z.string(),
+  modifiedDate: z.date(),
+  name: z.string(),
+  quality: z.enum(["LIKE_BRAND_NEW", "SLIGHTLY_USED", "USED"]),
+  quantity: z.number(),
   price: z.object({
     value: z.number(),
-    currency: z.string(),
+    currency: z.enum(["PHP", "USD"]),
   }),
-  quantity: z.number(),
-  quality: z.enum(["USED", "SLIGHTLY_USED", "LIKE_BRAND_NEW"]),
 });
 
 // TODO: Convert the procedure into Admin only for mutations
@@ -24,6 +39,7 @@ export const productsRouter = createTRPCRouter({
         data: {
           name: input.name,
           description: input.description,
+          category: input.category,
           imageSrc: input.imageSrc,
           price: input.price,
           quantity: input.quantity,

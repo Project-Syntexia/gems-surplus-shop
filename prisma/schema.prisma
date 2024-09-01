@@ -7,71 +7,72 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// model Logs {
-//     id String @id @default(auto()) @map("_id") @db.ObjectId
-//     model ModelEnum
-//     description String
-//     createdDate DateTime @default(now())
-// }
-
-model User {
-    id String @id @default(auto()) @map("_id") @db.ObjectId
-    userId String @unique
-    name String
-    address Address
-    gender  GenderEnum
-    phoneNumber String @default("000-000-0000")
-    comments Comment[]
-    createdDate DateTime @default(now())
-    modifiedDate DateTime @updatedAt
-    cart Cart[]
-}
-
 model Cart {
     id String @id @default(auto()) @map("_id") @db.ObjectId
     user User @relation(fields: [userId], references: [userId])
-    userId String @unique
+    userId String
     quantity Int
     product Product @relation(fields: [productId], references: [id])
     productId String @db.ObjectId
-}
-
-model Product {
-    id String @id @default(auto()) @map("_id") @db.ObjectId
-    name String
-    description String
-    imageSrc String
-    comments Comment[]
-    price Price
-    quantity Int
-    quality QualityEnum
-    createdDate DateTime @default(now())
-    modifiedDate DateTime @updatedAt
-    cart Cart[]
 }
 
 model Comment {
     id String @id @default(auto()) @map("_id") @db.ObjectId
     comment String
+    createdDate DateTime @default(now())
+    modifiedDate DateTime @updatedAt
+    product Product @relation(fields: [productId], references: [id])
+    productId String @db.ObjectId
     rating Int
     user User @relation(fields: [userId], references: [userId])
     userId String @unique
-    product Product @relation(fields: [productId], references: [id])
-    productId String @db.ObjectId
+}
+
+// model Logs {
+//     id String @id @default(auto()) @map("_id") @db.ObjectId
+//     createdDate DateTime @default(now())
+//     description String
+//     model ModelEnum
+// }
+
+model Product {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    cart Cart[]
+    category ItemsCategoryEnum
+    comments Comment[]
     createdDate DateTime @default(now())
+    description String
+    imageSrc String
     modifiedDate DateTime @updatedAt
+    name String
+    price Price
+    quality QualityEnum
+    quantity Int
+}
+
+model User {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    address Address
+    cart Cart[]
+    comments Comment[]
+    createdDate DateTime @default(now())
+    gender  GenderEnum
+    modifiedDate DateTime @updatedAt
+    name String
+    phoneNumber String @default("000-000-0000")
+    userId String @unique
 }
 
 type Address {
-    street String
     city String
     state String
+    street String
     zip String
 }
 
 type Price {
-    value Int
     currency String
+    value Int
 }
 
 enum GenderEnum {
@@ -79,15 +80,24 @@ enum GenderEnum {
     FEMALE
 }
 
+enum ItemsCategoryEnum {
+    ELECTRONICS
+    FASHION
+    FURNITURE
+    HARDWARE_ITEM
+    MEDIA
+    TOYS_AND_HOBBIES
+}
+
 enum QualityEnum {
-    USED
-    SLIGHTLY_USED
     LIKE_BRAND_NEW
+    SLIGHTLY_USED
+    USED
 }
 
 // enum ModelEnum {
-//     USER
 //     CART
-//     PRODUCT
 //     COMMENT
+//     PRODUCT
+//     USER
 // }

@@ -1,7 +1,8 @@
 import React from "react";
-import Header from "./header";
-import Footer from "./footer";
+
 import type { ChildrenType } from "@/app/layout";
+import Header from "@/app/_components/header";
+import Footer from "@/app/_components/footer";
 
 const Main = ({ children }: ChildrenType) => {
   return (

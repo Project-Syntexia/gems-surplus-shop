@@ -1,6 +1,6 @@
 import { HydrateClient } from "@/trpc/server";
 import Main from "@/app/_components/main";
-import { SHOP_NAME } from "./utils/const";
+import { SHOP_NAME } from "@/app/utils/const";
 
 export default async function Home() {
   return (

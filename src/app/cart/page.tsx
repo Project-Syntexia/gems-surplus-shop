@@ -1,72 +1,74 @@
 "use client";
 
-import { api } from "@/trpc/react";
 import React, { Suspense } from "react";
-import Main from "../_components/main";
+
+import Main from "@/app/_components/main";
 import ProductDetails, {
   productDetailsContainerClasses,
-} from "../_components/product";
-import type { ProductType } from "../product/page";
-import { EMPTY_STRING, INVALID_NUM } from "../utils/const";
+  type ProductType,
+} from "@/app/_components/product";
+import { EMPTY_STRING, INVALID_NUM } from "@/app/utils/const";
+import { api } from "@/trpc/react";
 
 const Page = () => {
-  const cartList = api.cart.fetchCartList.useSuspenseQuery();
-  const placeholderProduct: ProductType = {
-    id: EMPTY_STRING,
-    description: EMPTY_STRING,
-    createdDate: new Date(),
-    imageSrc: EMPTY_STRING,
-    modifiedDate: new Date(),
-    price: {
-      currency: "php",
-      value: INVALID_NUM,
-    },
-    name: EMPTY_STRING,
-    quality: "USED",
-    quantity: INVALID_NUM,
-  };
-  const placeHolderProducts = new Array<ProductType>(10).fill(
-    placeholderProduct,
-  );
+  try {
+    const cartList = api.cart.fetchCartList.useSuspenseQuery();
+    const placeHolderProducts = new Array<ProductType>(10).fill({
+      category: "ELECTRONICS",
+      createdDate: new Date(),
+      description: EMPTY_STRING,
+      id: EMPTY_STRING,
+      imageSrc: EMPTY_STRING,
+      modifiedDate: new Date(),
+      name: EMPTY_STRING,
+      price: {
+        currency: "PHP",
+        value: INVALID_NUM,
+      },
+      quality: "USED",
+      quantity: INVALID_NUM,
+    });
 
-  if (cartList[1].isError) {
+    return (
+      <Main>
+        <div className="h-full overflow-auto">
+          <Suspense
+            fallback={placeHolderProducts.map((data, index) => {
+              return <ProductDetails key={+new Date() + index} {...data} />;
+            })}
+          >
+            {cartList[1].data.map((data) => {
+              const { id, productId, quantity } = data;
+              const getProductById =
+                api.product.fetchProductById.useSuspenseQuery({
+                  id: productId,
+                });
+              const productResult = getProductById[1].data;
+              return (
+                <section key={id} className={productDetailsContainerClasses}>
+                  <ProductDetails
+                    {...({ ...productResult, quantity } as ProductType)}
+                    isDisabled
+                  />
+                </section>
+              );
+            })}
+          </Suspense>
+        </div>
+      </Main>
+    );
+  } catch (e) {
+    const errorList = Object.values(e as Object);
+    const errorMessage = errorList[1]?.["message"] ?? "Error message here";
+    console.log(errorMessage);
     return (
       <Main>
         <div>
-          <p>Error</p>
+          <p>{errorMessage}</p>
         </div>
       </Main>
     );
   }
-
-  return (
-    <Main>
-      <div className="h-full overflow-auto">
-        <Suspense
-          fallback={placeHolderProducts.map((data, index) => {
-            return <ProductDetails key={+new Date() + index} {...data} />;
-          })}
-        >
-          {cartList[1].data.map((data) => {
-            const { id, productId, quantity } = data;
-            const getProductById =
-              api.product.fetchProductById.useSuspenseQuery({
-                id: productId,
-              });
-            const productResult = getProductById[1].data;
-            return (
-              <section key={id} className={productDetailsContainerClasses}>
-                <ProductDetails
-                  {...({ ...productResult, quantity } as ProductType)}
-                  isDisabled
-                />
-              </section>
-            );
-          })}
-        </Suspense>
-      </div>
-    </Main>
-  );
 };
 
 export default Page;

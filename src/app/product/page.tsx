@@ -1,23 +1,20 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React, { type ChangeEvent, Suspense, useRef, useState } from "react";
-import type { api as serverApi } from "@/trpc/server";
+
 import Main from "@/app/_components/main";
 import { api } from "@/trpc/react";
-import { useRouter } from "next/navigation";
 import {
+  type ProductType,
   ProductDescription,
   ProductImage,
   ProductName,
   ProductPrice,
   ProductQuality,
   ProductQuantity,
-} from "../_components/product";
-import { EMPTY_STRING, INVALID_NUM } from "../utils/const";
-
-export type ProductType = Awaited<
-  ReturnType<typeof serverApi.product.createProduct>
->;
+} from "@/app/_components/product";
+import { EMPTY_STRING, INVALID_NUM } from "@/app/utils/const";
 
 type InitialStateType = {
   product: Partial<ProductType>;
@@ -26,7 +23,7 @@ type InitialStateType = {
 const initialState: InitialStateType = {
   product: {},
 };
-
+// TODO: Move the creation of products in Admin side.
 const Page = () => {
   const [state, setState] = useState(initialState);
   const refreshKey = useRef(+new Date());
@@ -52,15 +49,15 @@ const Page = () => {
   const STARTING_NUM = INVALID_NUM * INVALID_NUM;
   const PRODUCT_KEY_LENGTH = 6;
 
+  /** This helper function will return the key of ProductSchema. */
   function productComponentIdHelper(id: string) {
+    let idHolder = id;
     if (id.startsWith("product")) {
       const splittedId = id.split("-")[1]!;
       const imageSrcSplitValue = "image";
-      return splittedId === imageSrcSplitValue
-        ? "imageSrc"
-        : (splittedId as keyof ProductType);
+      idHolder = splittedId === imageSrcSplitValue ? "imageSrc" : splittedId;
     }
-    return id as keyof ProductType;
+    return idHolder as keyof ProductType;
   }
 
   function createProduct() {
@@ -90,7 +87,7 @@ const Page = () => {
               ...prevState.product,
               [key]: {
                 value: value as number,
-                currency: "php",
+                currency: "PHP",
               },
             }
           : {
@@ -142,7 +139,7 @@ const Page = () => {
         />
         <ProductPrice
           price={
-            state.product.price ?? { currency: "php", value: STARTING_NUM }
+            state.product.price ?? { currency: "PHP", value: STARTING_NUM }
           }
           input={{ onChange: handleInputChange }}
           select={{ onChange: handleSelectChange }}

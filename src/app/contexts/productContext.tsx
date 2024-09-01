@@ -1,7 +1,5 @@
 "use client";
 
-import type { ChildrenType } from "./layout";
-import { useParams } from "next/navigation";
 import {
   createContext,
   useCallback,
@@ -9,6 +7,9 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useParams } from "next/navigation";
+
+import type { ChildrenType } from "@/app/layout";
 
 type InitialStateType = {
   productId?: string;

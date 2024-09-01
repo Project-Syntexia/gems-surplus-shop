@@ -110,7 +110,6 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 });
 
 const isAuthed = timingMiddleware.unstable_pipe(async ({ next, ctx }) => {
-  console.log("is authed");
   if (ctx.session.userId === null) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
