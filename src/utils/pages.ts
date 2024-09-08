@@ -1,4 +1,6 @@
-export const pages = ["cart", "product", "settings", ""] as const;
+export const defaultRouteName = "dashboard";
+
+export const pages = ["products", "login", ""] as const;
 
 export function pagesRouting(page: (typeof pages)[number]) {
   const PREFIX = "/";

@@ -1,8 +1,16 @@
-import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
-import { usersRouter } from "@/server/api/routers/user";
-import { productsRouter } from "@/server/api/routers/product";
-import { commentsRouter } from "@/server/api/routers/comments";
-import { cartsRouter } from "@/server/api/routers/cart";
+import {
+  createCallerFactory,
+  createTRPCRouter,
+  mergeRouters,
+} from "@/server/api/trpc";
+import { productRouter as adminProductRouter } from "@/server/api/routers/admin/product";
+import { cartRouter as protectedCartRouter } from "@/server/api/routers/protected/cart";
+import { commentRouter as protectedCommentsRouter } from "@/server/api/routers/protected/comment";
+import { productRouter as protectedProductRouter } from "@/server/api/routers/protected/product";
+import { userRouter as protectedUsersRouter } from "@/server/api/routers/protected/user";
+import { commentRouter as publicCommentsRouter } from "@/server/api/routers/public/comment";
+import { productRouter as publicProductRouter } from "@/server/api/routers/public/product";
+import { generalRouter } from "./routers/public/general";
 
 /**
  * This is the primary router for your server.
@@ -10,10 +18,15 @@ import { cartsRouter } from "@/server/api/routers/cart";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  cart: cartsRouter,
-  comment: commentsRouter,
-  product: productsRouter,
-  user: usersRouter,
+  general: generalRouter,
+  cart: mergeRouters(protectedCartRouter),
+  comment: mergeRouters(protectedCommentsRouter, publicCommentsRouter),
+  product: mergeRouters(
+    adminProductRouter,
+    publicProductRouter,
+    protectedProductRouter,
+  ),
+  user: mergeRouters(protectedUsersRouter),
 });
 
 // export type definition of API

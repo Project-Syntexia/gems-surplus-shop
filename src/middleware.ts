@@ -1,11 +1,11 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isApiRoute = createRouteMatcher(["/api/trpc(.*)"]);
+const isPublic = createRouteMatcher(["/login(.*)"]);
 
 export default clerkMiddleware((auth, req) => {
-  if (!isApiRoute(req)) {
-    console.log("user is not signed in");
-    // auth().protect();
+  if (!isPublic(req)) {
+    console.log("User is not signed in!");
+    auth().protect();
   }
 });
 

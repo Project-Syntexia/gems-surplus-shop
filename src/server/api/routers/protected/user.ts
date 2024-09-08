@@ -1,20 +1,14 @@
-import { z } from "zod";
-
 import { createTRPCRouter, privateProcedure } from "@/server/api/trpc";
+import { userSchema } from "@/types/user.schema";
 
-const userSchema = z.object({
-  phoneNumber: z.string(),
-  address: z.object({
-    street: z.string(),
-    city: z.string(),
-    state: z.string(),
-    zip: z.string(),
-  }),
-  gender: z.enum(["MALE", "FEMALE"]),
-  name: z.string(),
-});
-
-export const usersRouter = createTRPCRouter({
+export const userRouter = createTRPCRouter({
+  /**
+   * This is in Private procedure because
+   *
+   * login type is only Google, this will make
+   *
+   * sure that the user is exists.
+   */
   createUser: privateProcedure
     .input(userSchema)
     .mutation(async ({ input, ctx }) => {
@@ -28,7 +22,6 @@ export const usersRouter = createTRPCRouter({
         },
       });
     }),
-
   updateUser: privateProcedure
     .input(userSchema)
     .mutation(async ({ input, ctx }) => {

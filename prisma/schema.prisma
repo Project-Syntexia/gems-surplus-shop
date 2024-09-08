@@ -28,22 +28,24 @@ model Comment {
     userId String @unique
 }
 
-// model Logs {
-//     id String @id @default(auto()) @map("_id") @db.ObjectId
-//     createdDate DateTime @default(now())
-//     description String
-//     model ModelEnum
-// }
+model Logs {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    createdDate DateTime @default(now())
+    description String
+    model ModelEnum
+}
 
 model Product {
     id String @id @default(auto()) @map("_id") @db.ObjectId
+    brand String @default("UNBRANDED")
     cart Cart[]
     category ItemsCategoryEnum
     comments Comment[]
     createdDate DateTime @default(now())
     description String
-    imageSrc String
+    images ProductImage[]
     modifiedDate DateTime @updatedAt
+    ratings ProductRatings
     name String
     price Price
     quality QualityEnum
@@ -59,7 +61,7 @@ model User {
     gender  GenderEnum
     modifiedDate DateTime @updatedAt
     name String
-    phoneNumber String @default("000-000-0000")
+    phoneNumber PhoneNumber
     userId String @unique
 }
 
@@ -70,9 +72,32 @@ type Address {
     zip String
 }
 
+type PhoneNumber {
+    countryCode Int
+    value String @default("000-000-0000")
+}
+
 type Price {
-    currency String
+    currency Currency
     value Int
+}
+
+type ProductImage {
+    alternateText String
+    customBorder String @default("NONE")
+    isHidden Boolean
+    orderNumber Int
+    source String
+}
+
+type ProductRatings {
+    totalRating Int @default(0)
+    numberOfRating Int @default(0)
+}
+
+enum Currency {
+    PHP
+    USD
 }
 
 enum GenderEnum {
@@ -89,15 +114,15 @@ enum ItemsCategoryEnum {
     TOYS_AND_HOBBIES
 }
 
+enum ModelEnum {
+    CART
+    COMMENT
+    PRODUCT
+    USER
+}
+
 enum QualityEnum {
     LIKE_BRAND_NEW
     SLIGHTLY_USED
     USED
 }
-
-// enum ModelEnum {
-//     CART
-//     COMMENT
-//     PRODUCT
-//     USER
-// }

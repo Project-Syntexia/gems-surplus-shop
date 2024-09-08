@@ -1,15 +1,9 @@
 import { z } from "zod";
 
 import { createTRPCRouter, privateProcedure } from "@/server/api/trpc";
+import { cartSchema } from "@/types/cart.schema";
 
-const cartSchema = z.object({
-  productId: z.string(),
-  quantity: z.number(),
-});
-
-// TODO: Convert the procedure into Admin only for mutations
-
-export const cartsRouter = createTRPCRouter({
+export const cartRouter = createTRPCRouter({
   addToCart: privateProcedure
     .input(cartSchema)
     .mutation(async ({ input, ctx }) => {

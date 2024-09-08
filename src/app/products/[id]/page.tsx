@@ -10,7 +10,7 @@ import ProductDetails, {
   productDetailsContainerClasses,
 } from "@/app/_components/product";
 import ProductProvider from "@/app/contexts/productContext";
-import { SHOP_NAME } from "@/app/utils/const";
+import { SHOP_NAME } from "@/utils/const";
 import { api } from "@/trpc/server";
 
 type MetadataParamsType = {
@@ -59,7 +59,6 @@ const Page = async ({ params }: MetadataParamsType) => {
         <ProductProvider>
           <div className={productDetailsContainerClasses}>
             <ProductDetails {...productDetails} isDisabled />
-            <AddToCartButton />
           </div>
         </ProductProvider>
       </Main>

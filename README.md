@@ -11,26 +11,12 @@ This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3
 - [Tailwind CSS](https://tailwindcss.com)
 - [tRPC](https://trpc.io)
 
-## Test for MongoDB
+# Future reference:
 
-```
-   const database = client.db("myTestDb");
-   const myPizzaCollection = database.collection("MyPizza");
-   const doc = { name: "Neapolitan pizza", shape: "round" };
-   try {
-     /* READ */
-     const finddocument = await myPizzaCollection.findOne(doc);
-     if (finddocument !== null) {
-       const pizza = finddocument as WithId<typeof doc>;
-       console.log(`${pizza._id} ${pizza.name} ${pizza.shape}`);
-     }
+- [Here](https://github.com/idurar/idurar-erp-crm)
 
-     /* WRITE */
-      const result = await myPizzaCollection.insertOne(doc);
-      console.log(
-        `Succesfully inserted ${result.insertedId}/${result.acknowledged}`,
-      );
-   } catch (err) {
-     console.log(err);
-   }
-```
+# Todo:
+
+- Make Logs Model tRPC API endpoint for every transaction in API endpoint.
+- Pagination 📄.
+- UI Cleanup 🧼. -> Componentize elements

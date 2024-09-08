@@ -12,6 +12,7 @@ import { ZodError } from "zod";
 
 import { db } from "@/server/db";
 import type { AuthObject } from "@clerk/backend";
+import { env } from "@/env";
 
 /**
  * 1. CONTEXT
@@ -123,6 +124,32 @@ const isAuthed = timingMiddleware.unstable_pipe(async ({ next, ctx }) => {
   });
 });
 
+const isAdmin = timingMiddleware.unstable_pipe(async ({ next, ctx }) => {
+  switch (ctx.session.userId) {
+    case env.GEMS_ADMIN_ID:
+      break;
+    case null:
+    case undefined:
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        cause: "Null and Undefined",
+      });
+    default:
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        cause: "Admin ID not found",
+      });
+  }
+
+  return next({
+    ctx: {
+      userId: ctx.session.userId,
+    },
+  });
+});
+
+export const mergeRouters = t.mergeRouters;
+
 /**
  * Public (unauthenticated) procedure
  *
@@ -139,3 +166,9 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  */
 
 export const privateProcedure = t.procedure.use(isAuthed);
+
+/**
+ * Admin procedure.
+ */
+
+export const adminProcedure = t.procedure.use(isAdmin);

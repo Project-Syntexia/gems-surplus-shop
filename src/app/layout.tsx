@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: ChildrenType) {
   return (
-    <ClerkProvider>
+    <ClerkProvider afterSignOutUrl="/login">
       <html lang="en" className={`${GeistSans.variable}`}>
         <body>
           <TRPCReactProvider>{children}</TRPCReactProvider>
