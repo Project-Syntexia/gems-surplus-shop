@@ -28,7 +28,7 @@ const Page = () => {
     if (!hasNoUser) {
       router.replace("/");
     }
-  }, [hasNoUser]);
+  }, [hasNoUser, router]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -43,11 +43,11 @@ const Page = () => {
     try {
       if (
         result !== undefined &&
-        result!.status === "complete" &&
+        result.status === "complete" &&
         setActive !== undefined
       ) {
         setState(initialState);
-        setActive({ session: result.createdSessionId! });
+        await setActive({ session: result.createdSessionId! });
       }
     } catch (err) {
       console.log(err);

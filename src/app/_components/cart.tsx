@@ -20,25 +20,25 @@ export const cartParagraphClasses =
   "text-bold text-primary group-hover:text-paper group-active:text-white";
 
 const AddToCartButton = () => {
-  try {
-    const inputQuantityRef = useRef<HTMLInputElement>(null!);
-    const refreshStateRef = useRef(+new Date());
-    const { productId } = useProduct();
-    const cartList = api.cart.fetchCartList.useSuspenseQuery();
-    // TODO: Bring Redux Here to manage Cart properly even during high latency
-    const [state, setState] = useState(cartList[1].data);
-    const addToCart = api.cart.addToCart.useMutation({
-      onSuccess: (data) => {
-        console.log(`Successfully added ${productId} in your Cart`);
-        refreshStateRef.current = +new Date();
-        setState((prevState) => [...prevState, data]);
-        cartList[1].refetch;
-      },
-      onError: ({ message }) => {
-        console.log(`${message}\nMaybe you are not signed-in!`);
-      },
-    });
+  const inputQuantityRef = useRef<HTMLInputElement>(null!);
+  const refreshStateRef = useRef(+new Date());
+  const { productId } = useProduct();
+  const cartList = api.cart.fetchCartList.useSuspenseQuery();
+  // TODO: Bring Redux Here to manage Cart properly even during high latency
+  const [state, setState] = useState(cartList[1].data);
+  const addToCart = api.cart.addToCart.useMutation({
+    onSuccess: (data) => {
+      console.log(`Successfully added ${productId} in your Cart`);
+      refreshStateRef.current = +new Date();
+      setState((prevState) => [...prevState, data]);
+      cartList[1].refetch;
+    },
+    onError: ({ message }) => {
+      console.log(`${message}\nMaybe you are not signed-in!`);
+    },
+  });
 
+  try {
     function addToCartHandler() {
       const index = state.findIndex((data) => data.productId === productId);
       if (index !== INVALID_NUM) return alert("Product already exists!");
@@ -76,12 +76,6 @@ const AddToCartButton = () => {
       </Suspense>
     );
   } catch (e) {
-    const router = useRouter();
-
-    function addToCartHandler(route: PagesType) {
-      router.push(route);
-    }
-
     return (
       <section className={cartSectionClasses}>
         <div className={fieldContainerClasses}>

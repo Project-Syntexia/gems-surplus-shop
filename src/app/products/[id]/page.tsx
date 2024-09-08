@@ -3,7 +3,6 @@ import type {
   // ResolvingMetadata
 } from "next";
 
-import AddToCartButton from "@/app/_components/cart";
 import Main from "@/app/_components/main";
 import ProductDetails, {
   type ProductType,

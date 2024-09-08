@@ -1,14 +1,10 @@
 import React, { forwardRef } from "react";
-import { z } from "zod";
 
-import {
-  cartButtonClasses,
-  cartParagraphClasses,
-  fieldContainerClasses,
-} from "@/app/_components/cart";
-import { productSchema } from "@/types/product.schema";
+import type { z } from "zod";
+
+import { fieldContainerClasses } from "@/app/_components/cart";
+import type { productSchema } from "@/types/product.schema";
 import Image from "next/image";
-import { EMPTY_STRING } from "../../utils/const";
 
 export type ProductType = z.infer<typeof productSchema>;
 
@@ -284,5 +280,7 @@ export const ProductCategory = forwardRef<
     </button>
   );
 });
+
+ProductCategory.displayName = "ProductCategory";
 
 export default ProductDetails;

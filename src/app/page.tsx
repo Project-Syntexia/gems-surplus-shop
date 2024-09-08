@@ -1,6 +1,5 @@
 import { api, HydrateClient } from "@/trpc/server";
 import Main from "@/app/_components/main";
-import { SHOP_NAME } from "@/utils/const";
 import { SignOutButton } from "@clerk/nextjs";
 
 export default async function Home() {
