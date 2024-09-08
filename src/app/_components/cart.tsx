@@ -96,7 +96,7 @@ const AddToCartButton = () => {
         </div>
         <button
           className={cartButtonClasses}
-          onClick={() => addToCartHandler("/settings")}
+          // onClick={() => addToCartHandler("/settings")}
         >
           <p className={cartParagraphClasses}>Add To Cart</p>
         </button>
