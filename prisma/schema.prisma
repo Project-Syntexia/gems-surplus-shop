@@ -46,7 +46,7 @@ model Product {
     images ProductImage[]
     modifiedDate DateTime @updatedAt
     ratings ProductRatings
-    name String
+    name String @unique
     price Price
     quality QualityEnum
     quantity Int

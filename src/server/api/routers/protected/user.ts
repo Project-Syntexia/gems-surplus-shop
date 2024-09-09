@@ -22,6 +22,7 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+
   updateUser: privateProcedure
     .input(userSchema)
     .mutation(async ({ input, ctx }) => {
@@ -37,4 +38,18 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+
+  /**
+   * Force the user to a profile creation when this
+   *
+   * returns null.
+   */
+  retrieveInformation: privateProcedure.query(async ({ ctx }) => {
+    const userInformation = await ctx.prisma.user.findUnique({
+      where: {
+        userId: ctx.userId,
+      },
+    });
+    return userInformation;
+  }),
 });
