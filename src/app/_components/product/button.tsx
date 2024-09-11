@@ -18,8 +18,12 @@ const ProductButton = (props: ProductButtonType) => {
   const router = useRouter();
 
   return (
-    <Button onClick={() => router.push(`${route}/${id}`)}>
-      <ProductImage image={images[0] ?? emptyProductImage} dimension={64} />
+    <Button style="" onClick={() => router.push(`${route}/${id}`)}>
+      <ProductImage
+        dimension="16:9"
+        image={images[0] ?? emptyProductImage}
+        size={160}
+      />
       <Paragraph
         text={name}
         color="black"

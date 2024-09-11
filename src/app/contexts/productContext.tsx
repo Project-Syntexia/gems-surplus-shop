@@ -20,6 +20,7 @@ const ProductContext = createContext<ProductContextType>({
   ...initialState,
 });
 
+/** Use for Cart Component. */
 export default function ProductProvider({ children }: ChildrenType) {
   const [state, setState] = useState(initialState);
   const product = useParams();

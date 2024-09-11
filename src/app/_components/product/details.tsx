@@ -1,11 +1,11 @@
 import ProductCategory from "@/app/_components/product/category";
 import ProductDescription from "@/app/_components/product/description";
-import ProductImage from "@/app/_components/product/image";
 import ProductName from "@/app/_components/product/name";
 import ProductPrice from "@/app/_components/product/price";
 import ProductQuality from "@/app/_components/product/quality";
 import ProductQuantity from "@/app/_components/product/quantity";
 import type { ProductType } from "@/types/product.schema";
+import ProductEditImages from "./edit-images";
 
 type ProductDetailsType = ProductType & {
   isDisabled?: true;
@@ -17,11 +17,7 @@ const ProductDetails = (props: ProductDetailsType) => {
 
   return (
     <>
-      <ProductImage
-        disabled={isDisabled}
-        image={images[0]!}
-        readOnly={isDisabled}
-      />
+      <ProductEditImages images={images} />
       <ProductName disabled={isDisabled} name={name} readOnly={isDisabled} />
       <ProductDescription
         description={description}

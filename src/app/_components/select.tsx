@@ -3,6 +3,7 @@ import React from "react";
 import type { LabeledType } from ".";
 import Parent from "@/app/_components/parent";
 import { fieldContainerClasses } from "@/app/_components/product";
+import type { CommonStyleType } from "@/styles/common";
 
 type OptionType<T> = {
   label: string;
@@ -11,7 +12,8 @@ type OptionType<T> = {
 
 export type SelectType<T> = {
   options: OptionType<T>[];
-} & LabeledType &
+} & CommonStyleType &
+  LabeledType &
   Omit<
     Partial<
       React.DetailedHTMLProps<
@@ -23,7 +25,7 @@ export type SelectType<T> = {
   >;
 
 const Select = <T,>(props: Omit<SelectType<T>, "className">) => {
-  const { label, options, ...rest } = props;
+  const { groupStyle, label, options, ...rest } = props;
   let productCategorySelectClasses =
     "ative:bg-contrast w-fit rounded-lg border border-primary bg-transparent p-2 capitalize text-primary duration-300 ease-in-out hover:bg-primary hover:text-paper active:text-paper";
 
@@ -34,7 +36,10 @@ const Select = <T,>(props: Omit<SelectType<T>, "className">) => {
   return (
     <Parent className={fieldContainerClasses}>
       {typeof label === "string" && <label htmlFor={rest.id}>{label}</label>}
-      <select className={productCategorySelectClasses} {...rest}>
+      <select
+        className={`${productCategorySelectClasses} ${groupStyle}`}
+        {...rest}
+      >
         {options.map(({ value, label }, index) => {
           let key: string | undefined;
 
@@ -49,7 +54,6 @@ const Select = <T,>(props: Omit<SelectType<T>, "className">) => {
                 );
             }
           } catch (error) {
-            console.log(error);
             key = `${new Date().getMilliseconds() + index}`;
           }
 

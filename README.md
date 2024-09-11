@@ -21,5 +21,7 @@ This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3
 - Pagination 📄.
 - State Manager.
 - Move client components out.
-- Responsive.
+- Add group styling in components. (Partial...)
+- Responsive. (In-progress...)
+
 - ~~UI Cleanup 🧼. -> Componentize elements.~~

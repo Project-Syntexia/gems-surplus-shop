@@ -19,7 +19,7 @@ const ProductPrice = (props: ProductPriceType) => {
   const productCurrencyId = "product-currency";
 
   return (
-    <section className="grid grid-flow-col gap-2">
+    <section className="grid w-full grid-flow-row justify-between gap-2 sm:grid-flow-col sm:justify-center">
       <Input
         id={productPriceId}
         label="Price"

@@ -2,6 +2,7 @@ import React from "react";
 
 import { type ColorType, getColor } from "@/styles/colors";
 import { EMPTY_STRING } from "@/utils/const";
+import type { CommonStyleType } from "@/styles/common";
 
 type ParagraphType = {
   activeColor?: ColorType;
@@ -9,7 +10,7 @@ type ParagraphType = {
   hoverColor?: ColorType;
   style?: "italic" | "bold" | "underline";
   text: string;
-};
+} & CommonStyleType;
 
 const Paragraph = (props: Omit<ParagraphType, "className">) => {
   const { activeColor, color, hoverColor, style, text } = props;
@@ -28,7 +29,7 @@ const Paragraph = (props: Omit<ParagraphType, "className">) => {
   function getStyle() {
     switch (style) {
       case "bold":
-        return "text-bold";
+        return "font-bold";
       case "italic":
         return style;
       case "underline":
@@ -40,7 +41,7 @@ const Paragraph = (props: Omit<ParagraphType, "className">) => {
 
   return (
     <p
-      className={`text-bold capitalize ${calculatedActiveColor} ${calculatedHoverColor} ${calculatedTextColor} ${getStyle()}`}
+      className={`text-center capitalize ${calculatedActiveColor} ${calculatedHoverColor} ${calculatedTextColor} ${getStyle()}`}
     >
       {text}
     </p>

@@ -11,6 +11,7 @@ import { userRouter as protectedUsersRouter } from "@/server/api/routers/protect
 import { commentRouter as publicCommentsRouter } from "@/server/api/routers/public/comment";
 import { generalRouter } from "@/server/api/routers/public/general";
 import { productRouter as publicProductRouter } from "@/server/api/routers/public/product";
+import { testingRouter } from "./routers/admin/testting";
 
 /**
  * This is the primary router for your server.
@@ -26,6 +27,7 @@ export const appRouter = createTRPCRouter({
     publicProductRouter,
     protectedProductRouter,
   ),
+  testing: testingRouter,
   user: mergeRouters(protectedUsersRouter),
 });
 

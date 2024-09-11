@@ -1,47 +1,37 @@
 import Image from "next/image";
 
 import type { ProductType } from "@/types/product.schema";
-import Input, { type InputType } from "@/app/_components/input";
 import Parent from "@/app/_components/parent";
 
 type ProductImageSourceType = {
   image: ProductType["images"][number];
-  dimension?: number;
-} & Omit<InputType, "label">;
+  dimension?: "16:9";
+  size?: number;
+};
 
+/** If `dimension` is undefined, the default size would be `square`. */
 const ProductImage = (props: ProductImageSourceType) => {
-  const { image, dimension, ...rest } = props;
+  const { image, dimension, size } = props;
   const productimageSourceId = "product-image-source";
-  const isHTTP = image.source.startsWith("https");
-  const finalDimension = dimension ?? 240;
+  const finalSize = Math.floor(size ?? 240);
+  const nineRatioFromSixteen = (finalSize / 16) * 9;
+  const finalHeight = Math.floor(nineRatioFromSixteen);
 
   return (
-    <>
-      {isHTTP ? (
-        <Parent className="flex items-start justify-start">
-          <label htmlFor={productimageSourceId} className="hidden">
-            Image Source:
-          </label>
-          <Image
-            alt={image.alternateText}
-            src={image.source}
-            className="rounded-lg p-1 shadow-sm"
-            width={finalDimension}
-            height={finalDimension}
-            sizes={`${finalDimension}x${finalDimension}`}
-          />
-        </Parent>
-      ) : (
-        <Input
-          label="Image:"
-          id={productimageSourceId}
-          placeholder="imageSrc"
-          readOnly
-          value={image.source}
-          {...rest}
-        />
-      )}
-    </>
+    <Parent className="flex items-start justify-start rounded-lg bg-primary">
+      <label htmlFor={productimageSourceId} className="hidden">
+        Image Source:
+      </label>
+      <Image
+        alt={image.alternateText}
+        src={image.source}
+        quality={70}
+        className="h-full w-full rounded-lg shadow-sm"
+        width={finalSize}
+        height={dimension === undefined ? finalSize : finalHeight}
+        sizes={`${finalSize}x${dimension === undefined ? finalSize : finalHeight}`}
+      />
+    </Parent>
   );
 };
 

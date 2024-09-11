@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { adminProcedure, createTRPCRouter } from "@/server/api/trpc";
-import { productSchema } from "@/types/product.schema";
+import { productImageSchema, productSchema } from "@/types/product.schema";
 
 const defaultRatings = {
   totalRating: 0,
@@ -61,6 +61,23 @@ export const productRouter = createTRPCRouter({
         },
         where: {
           id: input.id,
+        },
+      });
+    }),
+
+  addImageInProduct: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .input(productImageSchema)
+    .mutation(async ({ input, ctx }) => {
+      const { id, ...rest } = input;
+      return await ctx.prisma.product.update({
+        data: {
+          images: {
+            push: { ...rest },
+          },
+        },
+        where: {
+          id: id,
         },
       });
     }),

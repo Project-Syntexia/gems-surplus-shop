@@ -2,7 +2,12 @@ import React from "react";
 
 import type { ChildrenType } from "@/app/layout";
 
-export type ButtonType = ChildrenType &
+export type ButtonType = {
+  bgColor?: string;
+  borderColor?: string;
+  borderWidth?: string;
+  style?: string;
+} & ChildrenType &
   Omit<
     Partial<
       React.DetailedHTMLProps<
@@ -10,15 +15,36 @@ export type ButtonType = ChildrenType &
         HTMLButtonElement
       >
     >,
-    "className"
+    "className" | "style"
   >;
 
+/**
+ * `style` properties should contain other tailwind classes.
+ *
+ * @param props `bgColor` or `borderColor` or `borderWidth`
+ * @returns Custom Button component
+ */
 const Button = (props: ButtonType) => {
-  const { children, ...rest } = props;
+  const { bgColor, children, borderColor, borderWidth, style, ...rest } = props;
+  const baseClasses =
+    "group p-1 px-2 shadow-sm duration-300 ease-in-out rounded-lg";
+
+  function getBackgroundStyle() {
+    const colorClasses =
+      bgColor ?? "bg-transparent hover:bg-primary active:bg-contrast";
+    return `${colorClasses}`;
+  }
+
+  function getBorderStyle() {
+    const widthClasses = borderWidth ?? "border";
+    const colorClasses =
+      borderColor ?? "border-primary active:border-white hover:border-white";
+    return `${widthClasses} ${colorClasses}`;
+  }
 
   return (
     <button
-      className="group rounded-lg border border-primary bg-transparent p-1 px-2 shadow-sm duration-300 ease-in-out hover:border-paper hover:bg-primary active:border-white active:bg-contrast"
+      className={`${baseClasses} ${style} ${getBackgroundStyle()} ${getBorderStyle()}`}
       {...rest}
     >
       {children}

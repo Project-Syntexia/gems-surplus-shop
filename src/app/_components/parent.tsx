@@ -2,7 +2,7 @@ import React from "react";
 import type { ChildrenType } from "@/app/layout";
 
 type ParentType = {
-  className: string;
+  className?: string;
 } & ChildrenType;
 
 /**

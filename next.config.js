@@ -12,6 +12,10 @@ const config = {
         protocol: "https",
         hostname: "upload.wikimedia.org",
       },
+      {
+        protocol: "https",
+        hostname: "www.akc.org",
+      },
     ],
   },
 };

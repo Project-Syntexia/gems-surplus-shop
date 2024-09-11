@@ -4,12 +4,12 @@ import type {
 } from "next";
 
 import Main from "@/app/_components/main";
-import { productDetailsContainerClasses } from "@/app/_components/product";
-import ProductProvider from "@/app/contexts/productContext";
-import { SHOP_NAME } from "@/utils/const";
+import Paragraph from "@/app/_components/paragraph";
+import Parent from "@/app/_components/parent";
+import ProductDetails from "@/app/_components/product/details";
 import { api } from "@/trpc/server";
 import type { ProductType } from "@/types/product.schema";
-import ProductDetails from "@/app/_components/product/details";
+import { SHOP_NAME } from "@/utils/const";
 
 type MetadataParamsType = {
   params: { id: string };
@@ -46,6 +46,8 @@ export async function generateMetadata(
 }
 
 const Page = async ({ params }: MetadataParamsType) => {
+  const productDetailsContainerClasses =
+    "mx-auto w-full flex sm:w-3/4 flex-col items-center justify-center rounded-lg border p-2 shadow-sm";
   try {
     const productDetails = await getProductDetails(params.id);
 
@@ -53,20 +55,19 @@ const Page = async ({ params }: MetadataParamsType) => {
       throw new Error(`Result is null, Product ID: ${params.id} not found!`);
 
     return (
-      <Main>
-        <ProductProvider>
-          <div className={productDetailsContainerClasses}>
-            <ProductDetails {...productDetails} isDisabled />
-          </div>
-        </ProductProvider>
+      <Main isOverlapping>
+        <Paragraph text="Edit product" style="bold" />
+        <Parent className={productDetailsContainerClasses}>
+          <ProductDetails {...productDetails} isDisabled />
+        </Parent>
       </Main>
     );
   } catch (err) {
     return (
       <Main>
-        <div>
+        <Parent>
           <p>404 Not Found</p>
-        </div>
+        </Parent>
       </Main>
     );
   }

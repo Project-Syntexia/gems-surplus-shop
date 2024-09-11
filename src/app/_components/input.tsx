@@ -3,8 +3,10 @@ import React from "react";
 import type { LabeledType } from ".";
 import Parent from "@/app/_components/parent";
 import { fieldContainerClasses } from "@/app/_components/product";
+import type { CommonStyleType } from "@/styles/common";
 
-export type InputType = LabeledType &
+export type InputType = { isCapital?: boolean } & CommonStyleType &
+  LabeledType &
   Omit<
     Partial<
       React.DetailedHTMLProps<
@@ -16,12 +18,14 @@ export type InputType = LabeledType &
   >;
 
 const Input = (props: InputType) => {
-  const { label, ...rest } = props;
+  const { groupStyle, label, isCapital, ...rest } = props;
+  const inputClasses = `w-36 rounded-lg border border-primary bg-transparent p-2 shadow-sm md:w-fit`;
+
   return (
     <Parent className={fieldContainerClasses}>
       {typeof label === "string" && <label htmlFor={rest.id}>{label}</label>}
       <input
-        className="rounded-lg border border-primary bg-transparent p-2 capitalize shadow-sm"
+        className={`${inputClasses} ${groupStyle} ${isCapital ? "capitalize" : ""}`}
         readOnly={rest.disabled}
         {...rest}
       />

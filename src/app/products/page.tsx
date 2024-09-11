@@ -150,7 +150,6 @@ const Page = () => {
           />
           <ProductImage
             image={state.product.images?.[0] ?? emptyProductImage}
-            onChange={handleInputChange}
           />
           <ProductQuantity
             onChange={handleInputChange}
