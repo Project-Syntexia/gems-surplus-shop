@@ -1,26 +1,22 @@
-import { type CustomInputType, inputClasses } from ".";
-import { fieldContainerClasses } from "@/app/_components/cart";
+import Input, { type InputType } from "@/app/_components/input";
 import type { ProductType } from "@/types/product.schema";
 
 type ProductDescriptionType = {
   description: ProductType["description"];
-} & CustomInputType;
+} & Omit<InputType, "label">;
 
 const ProductDescription = (props: ProductDescriptionType) => {
   const { description, ...rest } = props;
   const productDescriptionId = "product-description";
 
   return (
-    <div className={fieldContainerClasses}>
-      <label htmlFor={productDescriptionId}>Description:</label>
-      <input
-        id={productDescriptionId}
-        placeholder="description"
-        className={inputClasses}
-        value={description}
-        {...rest}
-      />
-    </div>
+    <Input
+      label="Description"
+      id={productDescriptionId}
+      placeholder="description"
+      value={description}
+      {...rest}
+    />
   );
 };
 

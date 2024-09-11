@@ -3,11 +3,14 @@ import React from "react";
 import type { ChildrenType } from "@/app/layout";
 
 export type ButtonType = ChildrenType &
-  Partial<
-    React.DetailedHTMLProps<
-      React.ButtonHTMLAttributes<HTMLButtonElement>,
-      HTMLButtonElement
-    >
+  Omit<
+    Partial<
+      React.DetailedHTMLProps<
+        React.ButtonHTMLAttributes<HTMLButtonElement>,
+        HTMLButtonElement
+      >
+    >,
+    "className"
   >;
 
 const Button = (props: ButtonType) => {

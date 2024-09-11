@@ -1,27 +1,24 @@
-import { type CustomInputType, inputClasses } from ".";
-import { fieldContainerClasses } from "@/app/_components/cart";
+import type { InputType } from "@/app/_components/input";
+import Input from "@/app/_components/input";
 import type { ProductType } from "@/types/product.schema";
 
 type ProductQuantityType = {
   quantity: ProductType["quantity"];
-} & CustomInputType;
+} & Omit<InputType, "label">;
 
 const ProductQuantity = (props: ProductQuantityType) => {
   const { quantity, ...rest } = props;
   const productQuantityId = "product-quantity";
 
   return (
-    <div className={fieldContainerClasses}>
-      <label htmlFor={productQuantityId}>Quantity</label>
-      <input
-        id={productQuantityId}
-        placeholder="quantity"
-        className={inputClasses}
-        type="number"
-        value={quantity}
-        {...rest}
-      />
-    </div>
+    <Input
+      label="Quantity"
+      id={productQuantityId}
+      placeholder="quantity"
+      type="number"
+      value={quantity}
+      {...rest}
+    />
   );
 };
 

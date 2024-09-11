@@ -18,38 +18,31 @@ const ProductDetails = (props: ProductDetailsType) => {
   return (
     <>
       <ProductImage
-        image={images[0]!}
         disabled={isDisabled}
+        image={images[0]!}
         readOnly={isDisabled}
       />
-      <ProductName name={name} disabled={isDisabled} readOnly={isDisabled} />
+      <ProductName disabled={isDisabled} name={name} readOnly={isDisabled} />
       <ProductDescription
         description={description}
         disabled={isDisabled}
         readOnly={isDisabled}
       />
       <ProductQuantity
-        quantity={quantity}
         disabled={isDisabled}
+        quantity={quantity}
         readOnly={isDisabled}
       />
       <ProductQuality
-        quality={quality}
         disabled={isDisabled}
+        quality={quality}
         readOnly={isDisabled}
       />
-      <ProductPrice
-        price={price}
-        input={{
-          disabled: isDisabled,
-        }}
-        select={{
-          disabled: isDisabled,
-        }}
-      />
+      <ProductPrice disabled={isDisabled} price={price} />
       <ProductCategory
         category={props.category}
         disabled={isDisabled}
+        label="Category"
         readOnly={isDisabled}
       />
     </>

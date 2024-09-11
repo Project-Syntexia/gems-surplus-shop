@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 import Button from "@/app/_components/button";
+import Input from "@/app/_components/input";
 import Paragraph from "@/app/_components/paragraph";
-import { inputClasses } from "@/app/_components/product";
+import Parent from "@/app/_components/parent";
 import { EMPTY_STRING, SHOP_NAME } from "@/utils/const";
 
 const initialState = {
@@ -20,7 +21,6 @@ const Page = () => {
   const hasNoUser = isSignedIn === undefined || isSignedIn === false;
   const [state, setState] = useState(initialState);
   const { signIn, setActive } = useSignIn();
-  const noCapitalClasses = inputClasses.replace("capitalize", EMPTY_STRING);
 
   useEffect(() => {
     if (!hasNoUser) {
@@ -61,14 +61,13 @@ const Page = () => {
   return (
     <>
       <SignedOut>
-        <div className="flex h-screen items-center justify-center bg-gradient-to-tl from-primary via-paper">
+        <Parent className="flex h-screen items-center justify-center bg-gradient-to-tl from-primary via-paper">
           <form
             onSubmit={(e) => handleSubmit(e)}
             className="flex flex-col gap-2 rounded-lg border border-primary bg-paper/20 p-8 shadow-sm"
           >
             <h1 className="w-64 pb-4 text-center text-xl font-bold text-primary">{`${SHOP_NAME} Admin`}</h1>
-            <input
-              className={noCapitalClasses}
+            <Input
               disabled={!hasNoUser}
               id="username"
               name="username"
@@ -76,8 +75,7 @@ const Page = () => {
               value={state.username}
               placeholder="Username"
             />
-            <input
-              className={noCapitalClasses}
+            <Input
               disabled={!hasNoUser}
               id="password"
               name="password"
@@ -90,7 +88,7 @@ const Page = () => {
               <Paragraph text="Login" />
             </Button>
           </form>
-        </div>
+        </Parent>
       </SignedOut>
     </>
   );

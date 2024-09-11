@@ -11,7 +11,7 @@ type ParagraphType = {
   text: string;
 };
 
-const Paragraph = (props: ParagraphType) => {
+const Paragraph = (props: Omit<ParagraphType, "className">) => {
   const { activeColor, color, hoverColor, style, text } = props;
   const calculatedActiveColor = getColor({
     color: activeColor,
@@ -37,8 +37,6 @@ const Paragraph = (props: ParagraphType) => {
         return EMPTY_STRING;
     }
   }
-
-  console.log(calculatedActiveColor, calculatedHoverColor, calculatedTextColor);
 
   return (
     <p

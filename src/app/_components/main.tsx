@@ -6,7 +6,7 @@ type MainType = {
   isOverlapping?: true;
 } & ChildrenType;
 
-const Main = (props: MainType) => {
+const Main = (props: Omit<MainType, "className">) => {
   const { children, isOverlapping } = props;
   const commonClasses = "bg-paper";
   const mainClasses = `${isOverlapping ? "min-h-screen h-full" : "h-screen"} ${commonClasses}`;

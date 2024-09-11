@@ -9,7 +9,7 @@ import {
 } from "./src/styles/colors";
 
 export default {
-  content: ["./src/**/*.tsx", "./src/**/colors.ts"],
+  content: ["./src/**/*.tsx", "./src/**/colors.ts", "./src/**/index.ts"],
   theme: {
     extend: {
       fontFamily: {

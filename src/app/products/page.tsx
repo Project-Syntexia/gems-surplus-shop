@@ -2,8 +2,11 @@
 
 import { type ChangeEvent, useRef, useState } from "react";
 
+import Button from "@/app/_components/button";
 import Main from "@/app/_components/main";
+import Paragraph from "@/app/_components/paragraph";
 import SuspenseProduct from "@/app/_components/suspenseProduct";
+
 import ProductCategory from "@/app/_components/product/category";
 import ProductImage from "@/app/_components/product/image";
 import ProductDescription from "@/app/_components/product/description";
@@ -11,12 +14,13 @@ import ProductName from "@/app/_components/product/name";
 import ProductPrice from "@/app/_components/product/price";
 import ProductQuality from "@/app/_components/product/quality";
 import ProductQuantity from "@/app/_components/product/quantity";
+
 import { api } from "@/trpc/react";
+
 import type { ProductType } from "@/types/product.schema";
+
 import { EMPTY_STRING, INVALID_NUM } from "@/utils/const";
 import { emptyProductImage } from "@/utils/product";
-import Paragraph from "../_components/paragraph";
-import Button from "../_components/button";
 
 type InitialStateType = {
   product: Partial<ProductType>;
@@ -125,8 +129,8 @@ const Page = () => {
       <div className="p-2">
         <p className="text-center font-bold">Add a Product</p>
         <form
-          key={refreshKey.current}
           className="mx-auto flex w-max flex-col items-center justify-center rounded-lg border p-2 shadow-sm"
+          key={refreshKey.current}
           onSubmit={(e) => {
             e.preventDefault();
             createProduct();
@@ -149,22 +153,22 @@ const Page = () => {
             onChange={handleInputChange}
           />
           <ProductQuantity
-            quantity={state.product.quantity ?? STARTING_NUM}
             onChange={handleInputChange}
+            quantity={state.product.quantity ?? STARTING_NUM}
           />
           <ProductQuality
-            quality={state.product.quality ?? "USED"}
             onChange={handleSelectChange}
+            quality={state.product.quality ?? "USED"}
           />
           <ProductCategory
             category={state.product.category ?? "ELECTRONICS"}
             onChange={handleSelectChange}
           />
           <ProductPrice
+            input={{ onChange: handleInputChange }}
             price={
               state.product.price ?? { currency: "PHP", value: STARTING_NUM }
             }
-            input={{ onChange: handleInputChange }}
             select={{ onChange: handleSelectChange }}
           />
           <Button

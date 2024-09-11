@@ -1,33 +1,68 @@
 "use client";
 
 import { SignedIn } from "@clerk/nextjs";
-import { Suspense, useRef, useState } from "react";
+import { forwardRef, Suspense, useRef, useState } from "react";
 
-import Button from "@/app/_components/button";
+import Button, { type ButtonType } from "@/app/_components/button";
+import Input, { type InputType } from "@/app/_components/input";
 import Paragraph from "@/app/_components/paragraph";
-import Parent from "@/app/_components/parent";
-import { inputClasses } from "@/app/_components/product";
 import { useProduct } from "@/app/contexts/productContext";
 import { api } from "@/trpc/react";
 import { INVALID_NUM } from "@/utils/const";
 
-export const fieldContainerClasses =
-  "flex items-center justify-between p-2 gap-2 w-full";
-const cartSectionClasses = "mt-2 grid gap-2 rounded-sm border-t-2 p-2 pt-3";
+type CartButtonType = {
+  buttonProps?: Omit<ButtonType, "disabled" | "children">;
+  inputProps?: Omit<InputType, "disabled">;
+  key: number;
+  disabled?: boolean;
+};
+
+const CartButton = forwardRef<HTMLInputElement, CartButtonType>(
+  (props, ref) => {
+    const { buttonProps, inputProps, key, disabled } = props;
+
+    return (
+      <section className="mt-2 grid gap-2 rounded-sm border-t-2 p-2 pt-3">
+        <Input
+          label="Quantity:"
+          id="input-quantity"
+          ref={ref}
+          key={key}
+          min="1"
+          defaultValue={1}
+          type="number"
+          disabled={disabled}
+          {...inputProps}
+        />
+        <Button disabled={disabled} {...buttonProps}>
+          <Paragraph
+            text="Add To Cart"
+            color={"black"}
+            activeColor={"black"}
+            hoverColor={"black"}
+          />
+        </Button>
+      </section>
+    );
+  },
+);
+
+CartButton.displayName = "CartButton";
 
 const AddToCartButton = () => {
   const inputQuantityRef = useRef<HTMLInputElement>(null!);
   const refreshStateRef = useRef(+new Date());
   const { productId } = useProduct();
-  const cartList = api.cart.fetchCartList.useSuspenseQuery();
+  const [cartListData, cartListQuery] =
+    api.cart.fetchCartList.useSuspenseQuery();
   // TODO: Bring Redux Here to manage Cart properly even during high latency
-  const [state, setState] = useState(cartList[1].data);
+  const [state, setState] = useState(cartListData);
   const addToCart = api.cart.addToCart.useMutation({
     onSuccess: (data) => {
       console.log(`Successfully added ${productId} in your Cart`);
       refreshStateRef.current = +new Date();
       setState((prevState) => [...prevState, data]);
-      cartList[1].refetch;
+      cartListQuery.refetch;
     },
     onError: ({ message }) => {
       console.log(`${message}\nMaybe you are not signed-in!`);
@@ -47,56 +82,24 @@ const AddToCartButton = () => {
     return (
       <Suspense>
         <SignedIn>
-          <section className={cartSectionClasses}>
-            <div className={fieldContainerClasses}>
-              <label htmlFor="input-quantity">Quantity: </label>
-              <input
-                id="input-quantity"
-                className={inputClasses}
-                ref={inputQuantityRef}
-                key={refreshStateRef.current}
-                min="1"
-                defaultValue={1}
-                type="number"
-              />
-            </div>
-            <Button
-              onClick={addToCartHandler}
-              disabled={cartList[1].isRefetching}
-            >
-              <Paragraph
-                text="Add To Cart"
-                color={"black"}
-                activeColor={"black"}
-                hoverColor={"black"}
-              />
-            </Button>
-          </section>
+          <CartButton
+            ref={inputQuantityRef}
+            key={refreshStateRef.current}
+            disabled={cartListQuery.isRefetching}
+            buttonProps={{
+              onClick: () => addToCartHandler(),
+            }}
+          />
         </SignedIn>
       </Suspense>
     );
   } catch (e) {
     return (
-      <section className={cartSectionClasses}>
-        <Parent className={fieldContainerClasses}>
-          <label htmlFor="input-quantity">Quantity: </label>
-          <input
-            id="input-quantity"
-            className={inputClasses}
-            min="1"
-            defaultValue={1}
-            type="number"
-          />
-        </Parent>
-        <Button>
-          <Paragraph
-            text="Add To Cart"
-            color={"black"}
-            activeColor={"black"}
-            hoverColor={"black"}
-          />
-        </Button>
-      </section>
+      <CartButton
+        ref={inputQuantityRef}
+        key={refreshStateRef.current}
+        disabled={true}
+      />
     );
   }
 };

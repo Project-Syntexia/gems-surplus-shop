@@ -1,49 +1,45 @@
-import {
-  inputClasses,
-  selectClasses,
-  type CustomInputType,
-  type CustomSelectType,
-} from ".";
-import { fieldContainerClasses } from "@/app/_components/cart";
+import Input, { type InputType } from "@/app/_components/input";
+import Select, { type SelectType } from "@/app/_components/select";
 import type { ProductType } from "@/types/product.schema";
 
-type ProductPriceType = { price: ProductType["price"] } & {
-  input: CustomInputType;
+type ProductPriceType = { price: ProductType["price"]; disabled?: boolean } & {
+  input?: Omit<InputType, "label">;
 } & {
-  select: CustomSelectType;
+  select?: Omit<
+    SelectType<ProductType["price"]["currency"]>,
+    "options" | "label"
+  >;
 };
 
 const ProductPrice = (props: ProductPriceType) => {
-  const { value, currency } = props.price;
+  const { price, disabled } = props;
+  const { value, currency } = price;
+  const currencyOptions = ["PHP", "USD"];
   const productPriceId = "product-price";
   const productCurrencyId = "product-currency";
 
   return (
     <section className="grid grid-flow-col gap-2">
-      <div className={fieldContainerClasses}>
-        <label htmlFor={productPriceId}>Price</label>
-        <input
-          id={productPriceId}
-          className={inputClasses}
-          placeholder="price"
-          type="number"
-          value={value}
-          {...props.input}
-          readOnly={props.input.disabled}
-        />
-      </div>
-      <div className={fieldContainerClasses}>
-        <label htmlFor={productCurrencyId}>Currency</label>
-        <select
-          id={productCurrencyId}
-          value={currency}
-          className={selectClasses}
-          {...props.select}
-        >
-          <option>PHP</option>
-          <option>USD</option>
-        </select>
-      </div>
+      <Input
+        id={productPriceId}
+        label="Price"
+        placeholder="price"
+        type="number"
+        value={value}
+        disabled={disabled}
+        {...props.input}
+      />
+      <Select
+        label="Currency"
+        id={productCurrencyId}
+        value={currency}
+        options={currencyOptions.map((value) => ({
+          label: value,
+          value,
+        }))}
+        disabled={disabled}
+        {...props.select}
+      />
     </section>
   );
 };

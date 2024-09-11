@@ -19,4 +19,7 @@ This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3
 
 - Make Logs Model tRPC API endpoint for every transaction in API endpoint.
 - Pagination 📄.
-- UI Cleanup 🧼. -> Componentize elements
+- State Manager.
+- Move client components out.
+- Responsive.
+- ~~UI Cleanup 🧼. -> Componentize elements.~~
