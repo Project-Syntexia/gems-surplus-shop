@@ -31,3 +31,5 @@ export const productSchema = z.object({
     currency: z.enum(["PHP", "USD"]),
   }),
 });
+
+export type ProductType = z.infer<typeof productSchema>;

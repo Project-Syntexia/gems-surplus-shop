@@ -2,22 +2,18 @@
 
 import { SignedIn } from "@clerk/nextjs";
 import { Suspense, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 
-import type { PagesType } from "@/utils/pages";
-import { INVALID_NUM } from "@/utils/const";
+import Button from "@/app/_components/button";
+import Paragraph from "@/app/_components/paragraph";
+import Parent from "@/app/_components/parent";
+import { inputClasses } from "@/app/_components/product";
 import { useProduct } from "@/app/contexts/productContext";
 import { api } from "@/trpc/react";
-import { inputClasses } from "./product";
+import { INVALID_NUM } from "@/utils/const";
 
 export const fieldContainerClasses =
   "flex items-center justify-between p-2 gap-2 w-full";
 const cartSectionClasses = "mt-2 grid gap-2 rounded-sm border-t-2 p-2 pt-3";
-
-export const cartButtonClasses =
-  "group rounded-lg border border-primary bg-transparent p-1 px-2 shadow-sm duration-300 ease-in-out hover:border-paper hover:bg-primary active:border-white active:bg-contrast";
-export const cartParagraphClasses =
-  "text-bold text-primary group-hover:text-paper group-active:text-white";
 
 const AddToCartButton = () => {
   const inputQuantityRef = useRef<HTMLInputElement>(null!);
@@ -64,13 +60,17 @@ const AddToCartButton = () => {
                 type="number"
               />
             </div>
-            <button
-              className={cartButtonClasses}
+            <Button
               onClick={addToCartHandler}
               disabled={cartList[1].isRefetching}
             >
-              <p className={cartParagraphClasses}>Add To Cart</p>
-            </button>
+              <Paragraph
+                text="Add To Cart"
+                color={"black"}
+                activeColor={"black"}
+                hoverColor={"black"}
+              />
+            </Button>
           </section>
         </SignedIn>
       </Suspense>
@@ -78,7 +78,7 @@ const AddToCartButton = () => {
   } catch (e) {
     return (
       <section className={cartSectionClasses}>
-        <div className={fieldContainerClasses}>
+        <Parent className={fieldContainerClasses}>
           <label htmlFor="input-quantity">Quantity: </label>
           <input
             id="input-quantity"
@@ -87,13 +87,15 @@ const AddToCartButton = () => {
             defaultValue={1}
             type="number"
           />
-        </div>
-        <button
-          className={cartButtonClasses}
-          // onClick={() => addToCartHandler("/settings")}
-        >
-          <p className={cartParagraphClasses}>Add To Cart</p>
-        </button>
+        </Parent>
+        <Button>
+          <Paragraph
+            text="Add To Cart"
+            color={"black"}
+            activeColor={"black"}
+            hoverColor={"black"}
+          />
+        </Button>
       </section>
     );
   }

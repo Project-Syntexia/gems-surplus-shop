@@ -1,21 +1,22 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { type ChangeEvent, Suspense, useRef, useState } from "react";
+import { type ChangeEvent, useRef, useState } from "react";
 
 import Main from "@/app/_components/main";
+import SuspenseProduct from "@/app/_components/suspenseProduct";
+import ProductCategory from "@/app/_components/product/category";
+import ProductImage from "@/app/_components/product/image";
+import ProductDescription from "@/app/_components/product/description";
+import ProductName from "@/app/_components/product/name";
+import ProductPrice from "@/app/_components/product/price";
+import ProductQuality from "@/app/_components/product/quality";
+import ProductQuantity from "@/app/_components/product/quantity";
 import { api } from "@/trpc/react";
-import {
-  type ProductType,
-  ProductCategory,
-  ProductDescription,
-  ProductImage,
-  ProductName,
-  ProductPrice,
-  ProductQuality,
-  ProductQuantity,
-} from "@/app/_components/product";
+import type { ProductType } from "@/types/product.schema";
 import { EMPTY_STRING, INVALID_NUM } from "@/utils/const";
+import { emptyProductImage } from "@/utils/product";
+import Paragraph from "../_components/paragraph";
+import Button from "../_components/button";
 
 type InitialStateType = {
   product: Partial<ProductType>;
@@ -28,7 +29,6 @@ const initialState: InitialStateType = {
 const Page = () => {
   const [state, setState] = useState(initialState);
   const refreshKey = useRef(+new Date());
-  const router = useRouter();
   const [initalSettingsData] = api.general.initialSettings.useSuspenseQuery();
   const [fetchProductData] = api.product.fetchProducts.useSuspenseQuery(10);
   const createProductClientAPI =
@@ -50,14 +50,6 @@ const Page = () => {
 
   const STARTING_NUM = INVALID_NUM * INVALID_NUM;
   const PRODUCT_KEY_LENGTH = 7;
-
-  const emptyProductImage = {
-    alternateText: EMPTY_STRING,
-    source: EMPTY_STRING,
-    customBorder: "NONE",
-    isHidden: false,
-    orderNumber: 0,
-  };
 
   console.log(state.product);
 
@@ -129,7 +121,7 @@ const Page = () => {
   }
 
   return (
-    <Main>
+    <Main isOverlapping>
       <div className="p-2">
         <p className="text-center font-bold">Add a Product</p>
         <form
@@ -175,12 +167,12 @@ const Page = () => {
             input={{ onChange: handleInputChange }}
             select={{ onChange: handleSelectChange }}
           />
-          <button
+          <Button
             type="submit"
             disabled={Object.keys(state.product).length !== PRODUCT_KEY_LENGTH}
           >
-            Submit
-          </button>
+            <Paragraph text="Submit" color="primary" hoverColor="paper" />
+          </Button>
         </form>
       </div>
 
@@ -202,44 +194,7 @@ const Page = () => {
         </div>
       </section>
 
-      <Suspense
-        fallback={
-          <button
-            className="rounded-lg border bg-primary p-2 shadow-sm"
-            disabled
-          >
-            <p></p>
-            <p></p>
-          </button>
-        }
-      >
-        <div className="grid grid-cols-4 gap-2 p-2 pb-20">
-          {fetchProductData.map((data) => {
-            const { id, name, description, images } = data;
-            const descriptionMaxLength = 30;
-            return (
-              <button
-                key={id}
-                className="rounded-lg border border-primary bg-paper p-2 shadow-sm"
-                onClick={() => {
-                  router.push(`/products/${id}`);
-                }}
-              >
-                <ProductImage
-                  image={images[0] ?? emptyProductImage}
-                  dimension={64}
-                />
-                <p>{name}</p>
-                <p>
-                  {description.length > descriptionMaxLength
-                    ? `${description.substring(0, descriptionMaxLength)}...`
-                    : description}
-                </p>
-              </button>
-            );
-          })}
-        </div>
-      </Suspense>
+      <SuspenseProduct productList={fetchProductData} />
     </Main>
   );
 };

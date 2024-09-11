@@ -1,15 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-
-import {
-  cartButtonClasses,
-  cartParagraphClasses,
-} from "@/app/_components/cart";
-import { inputClasses } from "@/app/_components/product";
-import { EMPTY_STRING, SHOP_NAME } from "@/utils/const";
 import { SignedOut, useSignIn, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+
+import Button from "@/app/_components/button";
+import Paragraph from "@/app/_components/paragraph";
+import { inputClasses } from "@/app/_components/product";
+import { EMPTY_STRING, SHOP_NAME } from "@/utils/const";
 
 const initialState = {
   username: EMPTY_STRING,
@@ -88,13 +86,9 @@ const Page = () => {
               placeholder="Password"
               type="password"
             />
-            <button
-              className={cartButtonClasses}
-              disabled={!hasNoUser}
-              type="submit"
-            >
-              <p className={cartParagraphClasses}>Login</p>
-            </button>
+            <Button disabled={!hasNoUser} type="submit">
+              <Paragraph text="Login" />
+            </Button>
           </form>
         </div>
       </SignedOut>

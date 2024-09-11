@@ -1,26 +1,33 @@
-import { api, HydrateClient } from "@/trpc/server";
-import Main from "@/app/_components/main";
 import { SignOutButton } from "@clerk/nextjs";
 
+import Button from "@/app/_components/button";
+import Main from "@/app/_components/main";
+import Paragraph from "@/app/_components/paragraph";
+import SuspenseProduct from "@/app/_components/suspenseProduct";
+import { api, HydrateClient } from "@/trpc/server";
+
 export default async function Home() {
-  const { itemCategories } = await api.general.initialSettings();
+  const { itemCategories, newArrivals, totalProducts, totalUsers } =
+    await api.general.initialSettings();
 
   return (
     <HydrateClient>
       <Main>
         <div className="flex h-full bg-gradient-to-bl from-primary via-paper to-paper">
-          <section className="bg-pape grid justify-between border-r border-primary">
-            <div className="">
+          <section className="grid h-full justify-between border-r border-primary bg-paper">
+            <div>
               <p className="p-2 font-bold">Categories:</p>
               <ul className="flex h-fit flex-col gap-2 p-2 px-3">
                 {itemCategories.map((category) => {
                   return (
-                    <button
-                      key={category}
-                      className="rounded-md bg-primary p-2 text-start capitalize text-paper shadow-sm"
-                    >
-                      {category.replace(/_/g, " ").toLocaleLowerCase()}
-                    </button>
+                    <Button key={category}>
+                      <Paragraph
+                        text={category.replace(/_/g, " ").toLocaleLowerCase()}
+                        color="primary"
+                        hoverColor="paper"
+                        activeColor="secondary"
+                      />
+                    </Button>
                   );
                 })}
               </ul>
@@ -33,13 +40,16 @@ export default async function Home() {
           </section>
           <ul>
             <li>
-              <p>Total number of Products</p>
+              <Paragraph text="Total number of Products" />
+              <Paragraph text={`${totalProducts}`} />
             </li>
             <li>
-              <p>New Arrival</p>
+              <Paragraph text="New Arrival" />
+              <SuspenseProduct productList={newArrivals} />
             </li>
             <li>
-              <p>Active Users</p>
+              <Paragraph text="Active Users" />
+              <Paragraph text={`${totalUsers}`} />
             </li>
           </ul>
         </div>

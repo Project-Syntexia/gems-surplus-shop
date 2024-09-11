@@ -4,13 +4,12 @@ import type {
 } from "next";
 
 import Main from "@/app/_components/main";
-import ProductDetails, {
-  type ProductType,
-  productDetailsContainerClasses,
-} from "@/app/_components/product";
+import { productDetailsContainerClasses } from "@/app/_components/product";
 import ProductProvider from "@/app/contexts/productContext";
 import { SHOP_NAME } from "@/utils/const";
 import { api } from "@/trpc/server";
+import type { ProductType } from "@/types/product.schema";
+import ProductDetails from "@/app/_components/product/details";
 
 type MetadataParamsType = {
   params: { id: string };
