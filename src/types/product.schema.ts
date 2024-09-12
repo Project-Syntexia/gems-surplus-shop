@@ -8,17 +8,19 @@ export const productImageSchema = z.object({
   source: z.string(),
 });
 
+export const categoryEnum = z.enum([
+  "ELECTRONICS",
+  "FASHION",
+  "FURNITURE",
+  "HARDWARE_ITEM",
+  "MEDIA",
+  "TOYS_AND_HOBBIES",
+]);
+
 export const productSchema = z.object({
   id: z.string(),
   brand: z.string(),
-  category: z.enum([
-    "ELECTRONICS",
-    "FASHION",
-    "FURNITURE",
-    "HARDWARE_ITEM",
-    "MEDIA",
-    "TOYS_AND_HOBBIES",
-  ]),
+  category: categoryEnum,
   createdDate: z.date(),
   description: z.string(),
   images: z.array(productImageSchema),
@@ -32,4 +34,10 @@ export const productSchema = z.object({
   }),
 });
 
+export const categoryNoFilter = "NO_FILTER";
+
+export type CategoryEnumType = z.infer<typeof categoryEnum>;
+export type CategoryWithNoFilterType =
+  | CategoryEnumType
+  | typeof categoryNoFilter;
 export type ProductType = z.infer<typeof productSchema>;

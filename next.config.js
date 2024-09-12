@@ -16,6 +16,10 @@ const config = {
         protocol: "https",
         hostname: "www.akc.org",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.shopify.com",
+      },
     ],
   },
 };

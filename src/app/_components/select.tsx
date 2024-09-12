@@ -58,7 +58,11 @@ const Select = <T,>(props: Omit<SelectType<T>, "className">) => {
           }
 
           return (
-            <option className="" key={key}>
+            <option
+              className=""
+              key={key}
+              value={typeof value === "string" ? value : JSON.stringify(value)}
+            >
               {label}
             </option>
           );
