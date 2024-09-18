@@ -34,6 +34,14 @@ export const productSchema = z.object({
   }),
 });
 
+export const initialSettingsSchema = z.object({
+  itemCategories: z.array(categoryEnum),
+  shopName: z.string(),
+  totalProducts: z.number(),
+  totalUsers: z.number(),
+  newArrivals: z.array(productSchema),
+});
+
 export const categoryNoFilter = "NO_FILTER";
 
 export type CategoryEnumType = z.infer<typeof categoryEnum>;
@@ -41,3 +49,4 @@ export type CategoryWithNoFilterType =
   | CategoryEnumType
   | typeof categoryNoFilter;
 export type ProductType = z.infer<typeof productSchema>;
+export type InitialSettingsType = z.infer<typeof initialSettingsSchema>;

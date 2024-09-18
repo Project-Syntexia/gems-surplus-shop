@@ -1,6 +1,6 @@
 import React, { useRef, useState, type ChangeEvent } from "react";
 
-import Button from "@/app/_components/button";
+import { baseWithColorClasses as buttonBaseClasses } from "@/app/_components/button";
 import Paragraph from "@/app/_components/paragraph";
 import ProductCategory from "@/app/_components/product/category";
 import ProductDescription from "@/app/_components/product/description";
@@ -151,12 +151,13 @@ const CreateProduct = () => {
           }
           select={{ onChange: handleSelectChange }}
         />
-        <Button
-          type="submit"
+        <button
+          className={buttonBaseClasses}
           disabled={Object.keys(state.product).length !== PRODUCT_KEY_LENGTH}
+          type="submit"
         >
           <Paragraph text="Submit" color="primary" hoverColor="paper" />
-        </Button>
+        </button>
       </form>
     </div>
   );

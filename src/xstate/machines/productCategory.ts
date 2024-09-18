@@ -1,7 +1,9 @@
 import type {
   CategoryWithNoFilterType,
+  InitialSettingsType,
   ProductType,
 } from "@/types/product.schema";
+import { SHOP_NAME } from "@/utils/const";
 import { assign, setup } from "xstate";
 
 type ContextType = {
@@ -9,11 +11,15 @@ type ContextType = {
   category: CategoryWithNoFilterType;
   initialProducts: ProductType[];
   previousProducts: ProductType[];
+  initialSettingsData: InitialSettingsType;
 };
 type EventType =
   | {
       type: "categoryChange";
       initialProducts: ProductType[];
+    }
+  | {
+      type: "close";
     }
   | {
       type: "dispatching";
@@ -24,7 +30,11 @@ type EventType =
       type: "fetched";
     }
   | {
-      type: "close";
+      type: "initializing";
+    }
+  | {
+      type: "start";
+      initialSettingsData: InitialSettingsType;
     };
 
 const productCategory = setup({
@@ -40,14 +50,31 @@ const productCategory = setup({
   },
 }).createMachine({
   id: "product",
-  initial: "idle",
+  initial: "initializing",
   context: {
     activeProducts: [],
     category: "ELECTRONICS",
     initialProducts: [],
     previousProducts: [],
+    initialSettingsData: {
+      itemCategories: [],
+      shopName: SHOP_NAME,
+      totalProducts: 0,
+      totalUsers: 0,
+      newArrivals: [],
+    },
   },
   states: {
+    initializing: {
+      on: {
+        start: {
+          actions: assign({
+            initialSettingsData: ({ event }) => event.initialSettingsData,
+          }),
+          target: "idle",
+        },
+      },
+    },
     idle: {
       on: {
         categoryChange: {

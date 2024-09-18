@@ -1,7 +1,5 @@
 "use client";
 
-import { createBrowserInspector } from "@statelyai/inspect";
-import { useMachine } from "@xstate/react";
 import { useState, type ChangeEvent } from "react";
 
 // import CreateProduct from "@/app/_components/create-product";
@@ -9,39 +7,44 @@ import Main from "@/app/_components/main";
 import Paragraph from "@/app/_components/paragraph";
 import Parent from "@/app/_components/parent";
 import Select from "@/app/_components/select";
-import SuspenseProduct from "@/app/_components/suspenseProduct";
+import SuspenseProduct from "@/app/_components/product-list";
+import { useGlobalStateContext } from "@/app/_components/state-provider";
 import { api } from "@/trpc/react";
-import productCategory from "@/app/machines/productCategory";
 import {
   categoryNoFilter,
   type CategoryWithNoFilterType,
 } from "@/types/product.schema";
+import { useSelector } from "@xstate/react";
 
-const { inspect } = createBrowserInspector({
-  // Comment out the line below to start the inspector
-  autoStart: false,
-});
-
-// TODO: Move the creation of products in Admin side.
 const Page = () => {
+  // CUSTOM HOOKS
+
+  // STATE MANAGER
+  const { productService } = useGlobalStateContext();
+  const { initialSettingsData } = useSelector(
+    productService,
+    (snapshot) => snapshot.context,
+  );
+
+  // LOCAL STATES
   const [category, setCategory] =
     useState<CategoryWithNoFilterType>(categoryNoFilter);
-  const [initalSettingsData] = api.general.initialSettings.useSuspenseQuery();
-  const [initialProducts, initialProductsQuery] =
+
+  // QUERIES
+  const [initialProducts, fetchProductsQuery] =
     api.product.fetchProducts.useSuspenseQuery(10);
   const [filteredProducts, filteredProductsQuery] =
     api.product.fetchProductsByCategory.useSuspenseQuery({
       category: category === categoryNoFilter ? "ELECTRONICS" : category,
       limit: 10,
     });
-  const [machineState, send] = useMachine(productCategory, {
-    inspect,
-  });
 
-  send({ type: "categoryChange", initialProducts });
+  if (fetchProductsQuery.isFetched) {
+    productService.send({ type: "categoryChange", initialProducts });
+  }
 
-  if (initialProductsQuery.isError)
-    return alert("initialProductsQuery failed to fetch initial products.");
+  if (fetchProductsQuery.isError)
+    return alert("fetchProductsQuery failed to fetch products.");
   if (filteredProductsQuery.isError)
     return alert("filteredProductsQuery failed to fetch initial products.");
 
@@ -53,15 +56,13 @@ const Page = () => {
       return;
     }
     setCategory(category);
-    console.log("isFetching:", machineState.matches("fetching"));
-    send({
+
+    productService.send({
       category,
       filteredProducts,
       type: "dispatching",
     });
   }
-
-  console.log(machineState.context);
 
   return (
     <Main isOverlapping>
@@ -75,7 +76,7 @@ const Page = () => {
               value={category}
               onChange={handleCategoryChange}
               options={[
-                ...initalSettingsData.itemCategories,
+                ...initialSettingsData.itemCategories,
                 categoryNoFilter,
               ].map((category) => ({
                 label: category.replace(/_/g, " ").toLocaleLowerCase(),
@@ -85,7 +86,7 @@ const Page = () => {
           </Parent>
         </div>
       </section>
-      <SuspenseProduct productList={machineState.context.activeProducts} />
+      <SuspenseProduct />
     </Main>
   );
 };

@@ -18,7 +18,11 @@ const ProductButton = (props: ProductButtonType) => {
   const router = useRouter();
 
   return (
-    <Button style="" onClick={() => router.push(`${route}/${id}`)}>
+    <Button
+      style=""
+      onClick={() => router.push(`${route}/${id}`)}
+      disabledTrigger={["logging-in", "signing-out"]}
+    >
       <ProductImage
         dimension="16:9"
         image={images[0] ?? emptyProductImage}

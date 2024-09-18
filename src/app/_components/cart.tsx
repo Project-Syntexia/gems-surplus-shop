@@ -10,6 +10,7 @@ import { useProduct } from "@/app/contexts/productContext";
 import { api } from "@/trpc/react";
 import { INVALID_NUM } from "@/utils/const";
 
+// TODO: Move this to Client-side application
 type CartButtonType = {
   buttonProps?: Omit<ButtonType, "disabled" | "children">;
   inputProps?: Omit<InputType, "disabled">;
@@ -34,7 +35,7 @@ const CartButton = forwardRef<HTMLInputElement, CartButtonType>(
           disabled={disabled}
           {...inputProps}
         />
-        <Button disabled={disabled} {...buttonProps}>
+        <Button {...buttonProps}>
           <Paragraph
             text="Add To Cart"
             color={"black"}

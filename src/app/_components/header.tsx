@@ -3,6 +3,7 @@ import React from "react";
 
 import { defaultRouteName, pages, pagesRouting } from "@/utils/pages";
 import { EMPTY_STRING } from "@/utils/const";
+import Button from "./button";
 
 const Header = () => {
   return (
@@ -14,8 +15,16 @@ const Header = () => {
             const pageName = page === EMPTY_STRING ? defaultRouteName : page;
 
             return (
-              <li key={pageRoute} className="capitalize text-paper">
-                <Link href={pageRoute}>{pageName}</Link>
+              <li key={pageRoute}>
+                <Button
+                  noDisabledStyle
+                  style="capitalize text-paper shadow-none"
+                  bgColor="bg-transparent"
+                  borderColor="border-transparent"
+                  disabledTrigger={["initial", "logging-in", "signing-out"]}
+                >
+                  <Link href={pageRoute}>{pageName}</Link>
+                </Button>
               </li>
             );
           })}

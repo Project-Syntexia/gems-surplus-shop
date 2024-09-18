@@ -4,11 +4,13 @@ import { SignedOut, useSignIn, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-import Button from "@/app/_components/button";
+import { baseWithColorClasses as buttonBaseClasses } from "@/app/_components/button";
 import Input from "@/app/_components/input";
 import Paragraph from "@/app/_components/paragraph";
 import Parent from "@/app/_components/parent";
 import { EMPTY_STRING, SHOP_NAME } from "@/utils/const";
+import { useGlobalStateContext } from "../_components/state-provider";
+import { useSelector } from "@xstate/react";
 
 const initialState = {
   username: EMPTY_STRING,
@@ -17,16 +19,25 @@ const initialState = {
 
 const Page = () => {
   const router = useRouter();
-  const { isSignedIn } = useUser();
-  const hasNoUser = isSignedIn === undefined || isSignedIn === false;
+  const user = useUser();
+  const { inputGlobalAccessibilityService } = useGlobalStateContext();
+  const inputState = useSelector(
+    inputGlobalAccessibilityService,
+    (snapshot) => snapshot.context.state,
+  );
+  const isSignedIn =
+    !(user.isSignedIn === undefined || user.isSignedIn === false) ||
+    inputState === "default" ||
+    inputState === "logging-in" ||
+    inputState === "initial";
   const [state, setState] = useState(initialState);
   const { signIn, setActive } = useSignIn();
 
   useEffect(() => {
-    if (!hasNoUser) {
+    if (isSignedIn) {
       router.replace("/");
     }
-  }, [hasNoUser, router]);
+  }, [isSignedIn, router]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -46,6 +57,9 @@ const Page = () => {
       ) {
         setState(initialState);
         await setActive({ session: result.createdSessionId! });
+        inputGlobalAccessibilityService.send({
+          type: "input.signIn",
+        });
       }
     } catch (err) {
       console.log(err);
@@ -68,7 +82,7 @@ const Page = () => {
           >
             <h1 className="w-64 pb-4 text-center text-xl font-bold text-primary">{`${SHOP_NAME} Admin`}</h1>
             <Input
-              disabled={!hasNoUser}
+              disabled={isSignedIn}
               id="username"
               name="username"
               onChange={handleChange}
@@ -76,7 +90,7 @@ const Page = () => {
               placeholder="Username"
             />
             <Input
-              disabled={!hasNoUser}
+              disabled={isSignedIn}
               id="password"
               name="password"
               onChange={handleChange}
@@ -84,9 +98,13 @@ const Page = () => {
               placeholder="Password"
               type="password"
             />
-            <Button disabled={!hasNoUser} type="submit">
+            <button
+              className={buttonBaseClasses}
+              disabled={isSignedIn}
+              type="submit"
+            >
               <Paragraph text="Login" />
-            </Button>
+            </button>
           </form>
         </Parent>
       </SignedOut>

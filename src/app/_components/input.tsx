@@ -19,7 +19,7 @@ export type InputType = { isCapital?: boolean } & CommonStyleType &
 
 const Input = (props: InputType) => {
   const { groupStyle, label, isCapital, ...rest } = props;
-  const inputClasses = `w-36 rounded-lg border border-primary bg-transparent p-2 shadow-sm md:w-fit`;
+  const inputClasses = `rounded-lg border border-primary bg-transparent p-2 shadow-sm w-fit`;
 
   return (
     <Parent className={fieldContainerClasses}>

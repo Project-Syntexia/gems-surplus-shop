@@ -5,6 +5,7 @@ import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { ClerkProvider } from "@clerk/nextjs";
+import GlobalStateProvider from "./_components/state-provider";
 
 export type ChildrenType = { children: Readonly<React.ReactNode> };
 
@@ -19,7 +20,9 @@ export default function RootLayout({ children }: ChildrenType) {
     <ClerkProvider afterSignOutUrl="/login">
       <html lang="en" className={`${GeistSans.variable}`}>
         <body>
-          <TRPCReactProvider>{children}</TRPCReactProvider>
+          <TRPCReactProvider>
+            <GlobalStateProvider>{children}</GlobalStateProvider>
+          </TRPCReactProvider>
         </body>
       </html>
     </ClerkProvider>
