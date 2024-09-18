@@ -1,7 +1,7 @@
 import type { ChildrenType } from "@/app/layout";
 import Header from "@/app/_components/header";
 import Footer from "@/app/_components/footer";
-import useInputGlobalInitialize from "../hooks/useInputGlobalInitialize";
+import useInputGlobalInitialize from "@/hooks/useInputGlobalInitialize";
 
 type MainType = {
   isOverlapping?: true;

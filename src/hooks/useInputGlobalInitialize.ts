@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@clerk/nextjs";
-import { useGlobalStateContext } from "../_components/state-provider";
+import { useGlobalStateContext } from "@/app/_components/state-provider";
 
 const useInputGlobalInitialize = () => {
   const { inputGlobalAccessibilityService } = useGlobalStateContext();
